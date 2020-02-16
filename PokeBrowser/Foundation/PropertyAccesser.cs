@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace PokeBrowser
+namespace PokeBrowser.Foundation
 {
     internal interface IAccessor
     {

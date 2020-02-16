@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     /// <summary>
     /// デリゲートオペレーション

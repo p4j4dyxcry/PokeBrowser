@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PokeBrowser.Controls
+﻿namespace PokeBrowser.Controls
 {
     public interface ITriggerMessageAction
     {

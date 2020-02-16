@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace PokeBrowser.Models
 {
@@ -16,7 +13,7 @@ namespace PokeBrowser.Models
 
         public static bool IsBanLegend(Data.PokemonData data)
         {
-            int[] ids = new []
+            var ids = new []
             {
                 493, //アルセウス
                 890, //ムゲンダイナ

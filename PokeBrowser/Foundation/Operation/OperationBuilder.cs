@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     public partial class OperationBuilder
     {

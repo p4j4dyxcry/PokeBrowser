@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PokeBrowser.Operation.Internal
+namespace PokeBrowser.Foundation.Operation.Internal
 {
     internal class UndoStack<T> : IStack<T> 
     {

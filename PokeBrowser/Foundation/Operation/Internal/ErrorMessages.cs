@@ -1,4 +1,4 @@
-﻿namespace PokeBrowser.Operation.Internal
+﻿namespace PokeBrowser.Foundation.Operation.Internal
 {
     internal static class ErrorMessages
     {

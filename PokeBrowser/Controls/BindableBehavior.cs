@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,8 +15,8 @@ namespace PokeBrowser.Controls
 
         public Behavior<T> Binding
         {
-            get { return (Behavior<T>)GetValue(BindingProperty); }
-            set { SetValue(BindingProperty, value); }
+            get => (Behavior<T>)GetValue(BindingProperty);
+            set => SetValue(BindingProperty, value);
         }
 
         protected override void OnAttached()

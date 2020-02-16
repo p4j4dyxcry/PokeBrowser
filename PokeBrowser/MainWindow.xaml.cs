@@ -1,6 +1,4 @@
-﻿using PokeBrowser.Data;
-using PokeBrowser.ViewModels;
-using System.Windows;
+﻿using PokeBrowser.ViewModels;
 
 namespace PokeBrowser
 {

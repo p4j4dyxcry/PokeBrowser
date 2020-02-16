@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
-using PokeBrowser.Foundation;
-using System.Text;
 
 namespace PokeBrowser.Foundation
 {

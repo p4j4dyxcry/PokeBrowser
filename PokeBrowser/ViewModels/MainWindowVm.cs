@@ -8,7 +8,6 @@ using System;
 using PokeBrowser.Foundation;
 using PokeBrowser.Models;
 using System.Windows.Input;
-using Livet.Commands;
 using Livet.Messaging;
 using System.ComponentModel;
 
@@ -18,10 +17,10 @@ namespace PokeBrowser.ViewModels
     {
         public List<PokemonListItemVm> ItemsSource { get; }
 
-        public List<FilterVm> IdFIlter { get; }
+        public List<FilterVm> IdFilter { get; }
 
         public IReactiveProperty<string> FilterText { get; }
-        public IReactiveProperty<bool> ShowMegaShinka { get; }
+        public IReactiveProperty<bool> ShowMegaEvolution { get; }
         public IReactiveProperty<bool> ShowBanLegend { get; }
 
         public ICommand ShowDetailCommand { get; }
@@ -29,8 +28,8 @@ namespace PokeBrowser.ViewModels
         public MainWindowVm()
         {
             FilterText = new ReactivePropertySlim<string>(string.Empty).AddTo(CompositeDisposable);
-            ShowMegaShinka = new ReactivePropertySlim<bool>(false).AddTo(CompositeDisposable);
-            ShowBanLegend = new ReactivePropertySlim<bool>(false).AddTo(CompositeDisposable);
+            ShowMegaEvolution = new ReactivePropertySlim<bool>().AddTo(CompositeDisposable);
+            ShowBanLegend = new ReactivePropertySlim<bool>().AddTo(CompositeDisposable);
 
             ShowDetailCommand = new DelegateCommand<INotifyPropertyChanged>(x => Messenger.Raise(new TransitionMessage(x, "ShowDetail")));
 
@@ -50,18 +49,18 @@ namespace PokeBrowser.ViewModels
                 .OrderBy(x=>x.ID)
                 .ToList();
 
-            IdFIlter = new List<FilterVm>()
+            IdFilter = new List<FilterVm>()
             {
                 new FilterVm("全国",(x)=>true),
                 new FilterVm("ガラル",(x)=>x.GalarID != null),
             };
                 
-            IdFIlter
-                .Select(x => x.ObserveProperty(x => x.IsEnabled))
+            IdFilter
+                .Select(x => x.ObserveProperty(filterVm => filterVm.IsEnabled))
                 .Merge()
                 .StartWith()
-                .Where(x=>IdFIlter.Any(x=>x.IsEnabled))
-                .Select(_=>IdFIlter.FirstOrDefault(x => x.IsEnabled))
+                .Where(x=>IdFilter.Any(filterVm=>filterVm.IsEnabled))
+                .Select(_=>IdFilter.FirstOrDefault(x => x.IsEnabled))
                 .Throttle(TimeSpan.FromMilliseconds(50))
                 .ObserveOnUIDispatcher()
                 .Do(x =>
@@ -88,7 +87,7 @@ namespace PokeBrowser.ViewModels
                 .Subscribe(_ => Messenger.Raise(new InteractionMessage("RaiseFilter")))
                 .AddTo(CompositeDisposable);
 
-            ShowMegaShinka
+            ShowMegaEvolution
                 .Merge(ShowBanLegend)
                 .Throttle(TimeSpan.FromMilliseconds(5))
                 .ObserveOnDispatcher()
@@ -98,7 +97,7 @@ namespace PokeBrowser.ViewModels
 
         private void ApplyFilters()
         {
-            var idFilter = IdFIlter?.FirstOrDefault(x => x.IsEnabled);
+            var idFilter = IdFilter?.FirstOrDefault(x => x.IsEnabled);
 
             foreach (var item in ItemsSource)
                 item.IsVisible = true;
@@ -106,7 +105,7 @@ namespace PokeBrowser.ViewModels
             if(idFilter != null)
                 Filter(idFilter.Filter);
 
-            if (ShowMegaShinka.Value is false)
+            if (ShowMegaEvolution.Value is false)
             {
                 Filter(x=>!Filters.IsMegashinka(x));
             }

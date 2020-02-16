@@ -1,5 +1,5 @@
 ﻿
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     /// <summary>
     /// ロールバック可能な操作のインタフェース

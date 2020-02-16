@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     /// <summary>
     /// オペレーションを作成する基本的なビルダー

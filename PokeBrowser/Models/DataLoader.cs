@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.IO;
 using PokeBrowser.Data;
 using PokeBrowser.Foundation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
-namespace PokeBrowser
+namespace PokeBrowser.Models
 {
     public static class DataLoader
     {

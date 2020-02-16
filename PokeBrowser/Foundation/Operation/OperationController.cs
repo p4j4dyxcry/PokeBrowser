@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using PokeBrowser.Operation.Internal;
+using PokeBrowser.Foundation.Operation.Internal;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     /// <summary>
     /// 標準的なオペレーションコントローラ

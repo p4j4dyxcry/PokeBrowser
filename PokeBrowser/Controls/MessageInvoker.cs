@@ -7,15 +7,15 @@ namespace PokeBrowser.Controls
     {
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(
-            nameof(Target), // プロパティ名を指定
-            typeof(ITriggerMessageAction), // プロパティの型を指定
-            typeof(MessageInvoker), // プロパティを所有する型を指定
-            new PropertyMetadata(default)); // メタデータを指定。ここではデフォルト値を設定してる
+            nameof(Target),
+            typeof(ITriggerMessageAction),
+            typeof(MessageInvoker),
+            new PropertyMetadata(default));
 
         public ITriggerMessageAction Target
         {
-            get { return (ITriggerMessageAction)GetValue(TargetProperty); }
-            set { SetValue(TargetProperty, value); }
+            get => (ITriggerMessageAction)GetValue(TargetProperty);
+            set => SetValue(TargetProperty, value);
         }
 
 

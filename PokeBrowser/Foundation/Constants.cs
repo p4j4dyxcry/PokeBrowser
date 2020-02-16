@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PokeBrowser
+namespace PokeBrowser.Foundation
 {
     public static class Constants
     {

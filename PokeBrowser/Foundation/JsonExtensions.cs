@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace PokeBrowser.Foundation
 {
@@ -17,16 +14,14 @@ namespace PokeBrowser.Foundation
         public static void SerializeToFile<T>(this T obj, string path)
         {
             // JSON データにシリアライズ
-            var jsonData = JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
+            var jsonData = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
             var directory = Directory.GetParent(path).FullName;
             Directory.CreateDirectory(directory);
 
-            using (var sw = new StreamWriter(path, false, System.Text.Encoding.UTF8))
-            {
-                // JSON データをファイルに書き込み
-                sw.Write(jsonData);
-            }
+            using var sw = new StreamWriter(path, false, System.Text.Encoding.UTF8);
+            // JSON データをファイルに書き込み
+            sw.Write(jsonData);
         }
 
         /// <summary>

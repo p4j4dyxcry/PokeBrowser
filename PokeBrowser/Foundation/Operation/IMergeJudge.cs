@@ -1,4 +1,4 @@
-﻿namespace PokeBrowser.Operation
+﻿namespace PokeBrowser.Foundation.Operation
 {
     public interface IMergeJudge
 

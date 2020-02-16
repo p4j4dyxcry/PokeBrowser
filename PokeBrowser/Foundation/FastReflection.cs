@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace PokeBrowser
+namespace PokeBrowser.Foundation
 {
 #nullable disable
     public static class FastReflection

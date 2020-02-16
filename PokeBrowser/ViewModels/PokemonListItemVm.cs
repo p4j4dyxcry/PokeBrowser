@@ -1,8 +1,5 @@
 ﻿using PokeBrowser.Data;
-using PokeBrowser.Foundation;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using PokeBrowser.Models;
 
 namespace PokeBrowser.ViewModels
 {
@@ -26,15 +23,15 @@ namespace PokeBrowser.ViewModels
         public int SemiFastest { get; }
         public int FastestScarf => Fastest * 3 / 2;
         public int DefaultSpeed { get; }
-        public int Lastest { get; }
+        public int Latest { get; }
 
         public PokemonListItemVm(PokemonData pokemonData) : base(pokemonData)
         {
             ID = pokemonData.Id;
-            Fastest = Calcrator.CalcParametor(pokemonData.Speed, 31, 252, 1.1, 50);
-            DefaultSpeed = Calcrator.CalcParametor(pokemonData.Speed, 31, 0, 1.0, 50);
-            SemiFastest = Calcrator.CalcParametor(pokemonData.Speed, 31, 252, 1.0, 50);
-            Lastest = Calcrator.CalcParametor(pokemonData.Speed,  0,   0, 0.9, 50);
+            Fastest = Calculator.CalcParameter(pokemonData.Speed, 31, 252, 1.1, 50);
+            DefaultSpeed = Calculator.CalcParameter(pokemonData.Speed, 31, 0, 1.0, 50);
+            SemiFastest = Calculator.CalcParameter(pokemonData.Speed, 31, 252, 1.0, 50);
+            Latest = Calculator.CalcParameter(pokemonData.Speed,  0,   0, 0.9, 50);
         }
     }
 }

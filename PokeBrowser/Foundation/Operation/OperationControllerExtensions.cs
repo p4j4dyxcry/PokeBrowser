@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
     public static class OperationControllerExtensions
     {

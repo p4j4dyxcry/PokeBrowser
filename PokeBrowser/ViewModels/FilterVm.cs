@@ -1,7 +1,5 @@
 ﻿using PokeBrowser.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PokeBrowser.ViewModels
 {

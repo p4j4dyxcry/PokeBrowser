@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace PokeBrowser.Operation
+namespace PokeBrowser.Foundation.Operation
 {
 #nullable disable
     /// <summary>

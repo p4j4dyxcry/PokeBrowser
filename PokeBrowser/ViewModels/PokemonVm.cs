@@ -1,8 +1,7 @@
-﻿using PokeBrowser.Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using PokeBrowser.Data;
 using System.IO;
-using System.Text;
+using PokeBrowser.Models;
 
 namespace PokeBrowser.ViewModels
 {
@@ -12,10 +11,10 @@ namespace PokeBrowser.ViewModels
         public string Type1 { get; }
         public string Type2 { get; }
         public int Hp { get; }
-        public int Atack { get; }
-        public int Defence { get; }
-        public int SpAtack {get;}
-        public int SpDefence { get; }
+        public int Attack { get; }
+        public int Defense { get; }
+        public int SpAttack {get;}
+        public int SpDefense { get; }
         public int Speed { get; }
         public int Total { get; }
         public string Ability1 { get; }
@@ -40,9 +39,9 @@ namespace PokeBrowser.ViewModels
                 {
                     var form = pokemonData.Form;
                     if(form.Contains("のすがた"))
-                        form = form.Substring(0,form.IndexOf("のすがた"));
+                        form = form.Substring(0,form.IndexOf("のすがた", StringComparison.Ordinal));
                     if (form.Contains("フォルム"))
-                        form = form.Substring(0, form.IndexOf("フォルム"));
+                        form = form.Substring(0, form.IndexOf("フォルム", StringComparison.Ordinal));
 
                     Name += $"({form})";
                 }
@@ -51,12 +50,12 @@ namespace PokeBrowser.ViewModels
             Type1 = pokemonData.Type1;
             Type2 = pokemonData.Type2 ?? string.Empty;
             Hp = pokemonData.Hp;
-            Atack = pokemonData.Attack;
-            Defence = pokemonData.Defense;
-            SpAtack = pokemonData.SpecialAttack;
-            SpDefence = pokemonData.SpecialDefense;
+            Attack = pokemonData.Attack;
+            Defense = pokemonData.Defense;
+            SpAttack = pokemonData.SpecialAttack;
+            SpDefense = pokemonData.SpecialDefense;
             Speed = pokemonData.Speed;
-            Total = Hp + Atack + Defence + SpAtack + SpDefence + Speed;
+            Total = Hp + Attack + Defense + SpAttack + SpDefense + Speed;
 
             Group1 = pokemonData.Group1;
             Group2 = pokemonData.Group2;
