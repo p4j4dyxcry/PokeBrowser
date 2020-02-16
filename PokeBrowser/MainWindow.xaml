@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:PokeBrowser.Controls"
         xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
+        xmlns:views="clr-namespace:PokeBrowser.Views"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         mc:Ignorable="d"
@@ -19,6 +20,9 @@
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="RaiseFilter" Messenger="{Binding Messenger}" >
             <controls:MessageInvoker Target="{StaticResource FilterBihavior}"/>
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="ShowDetail" Messenger="{Binding Messenger}">
+            <l:TransitionInteractionMessageAction  Mode="Normal" WindowType="{x:Type views:DetailView}" />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <StackPanel>
@@ -55,9 +59,20 @@
                               CanUserDeleteRows="False"
                               SelectionMode="Extended"
                               SelectionUnit="CellOrRowHeader">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
+                                <!--Row Styles-->
+
+                            </Style>
+                        </DataGrid.RowStyle>
                         <i:Interaction.Behaviors>
                             <controls:ItemsControlBindableBehavior Binding="{StaticResource FilterBihavior}" />
                         </i:Interaction.Behaviors>
+                        <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding Path=ShowDetailCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem , RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding ID}"/>
                             <DataGridTemplateColumn Header="名前" IsReadOnly="True" 
@@ -66,6 +81,9 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <WrapPanel>
+                                            <i:Interaction.Behaviors>
+                                                <controls:DoubleClickBehavior Command="{Binding DataContext.ShowDetailCommand , Mode=OneWay , RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
+                                            </i:Interaction.Behaviors>
                                             <Image Source="{Binding ImageSource}" Width="20" Height="20" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Name}"/>
                                         </WrapPanel>

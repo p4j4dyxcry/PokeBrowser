@@ -7,6 +7,10 @@ using System.Reactive.Linq;
 using System;
 using PokeBrowser.Foundation;
 using PokeBrowser.Models;
+using System.Windows.Input;
+using Livet.Commands;
+using Livet.Messaging;
+using System.ComponentModel;
 
 namespace PokeBrowser.ViewModels
 {
@@ -20,11 +24,15 @@ namespace PokeBrowser.ViewModels
         public IReactiveProperty<bool> ShowMegaShinka { get; }
         public IReactiveProperty<bool> ShowBanLegend { get; }
 
+        public ICommand ShowDetailCommand { get; }
+
         public MainWindowVm()
         {
             FilterText = new ReactivePropertySlim<string>(string.Empty).AddTo(CompositeDisposable);
             ShowMegaShinka = new ReactivePropertySlim<bool>(false).AddTo(CompositeDisposable);
             ShowBanLegend = new ReactivePropertySlim<bool>(false).AddTo(CompositeDisposable);
+
+            ShowDetailCommand = new DelegateCommand<INotifyPropertyChanged>(x => Messenger.Raise(new TransitionMessage(x, "ShowDetail")));
 
             var abilities = DataLoader.LoadAbilities();
             var types = DataLoader.LoadTypes();
@@ -77,7 +85,7 @@ namespace PokeBrowser.ViewModels
             FilterText
                 .Throttle(TimeSpan.FromMilliseconds(50))
                 .ObserveOnUIDispatcher()
-                .Subscribe(_ => Messenger.Raise(new Livet.Messaging.InteractionMessage("RaiseFilter")))
+                .Subscribe(_ => Messenger.Raise(new InteractionMessage("RaiseFilter")))
                 .AddTo(CompositeDisposable);
 
             ShowMegaShinka
@@ -106,7 +114,7 @@ namespace PokeBrowser.ViewModels
             {
                 Filter(x => !Filters.IsBanLegend(x));
             }
-            Messenger.Raise(new Livet.Messaging.InteractionMessage("RaiseFilter"));
+            Messenger.Raise(new InteractionMessage("RaiseFilter"));
         }
 
         private void Filter(Func<PokemonData,bool>filter)

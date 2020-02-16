@@ -6,9 +6,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PokeBrowser.Views"
+        xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
         mc:Ignorable="d"
-        Title="DetailView" Height="450" Width="800">
-    <Grid>
-        
+        WindowStartupLocation="Manual"
+        d:DataContext="{d:DesignInstance Type={x:Type vms:PokemonVm}}"
+        Title="{Binding Name}" Height="800" Width="700">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Image Source="{Binding ImageSource}" Width="100" Height="100" HorizontalAlignment="Left"/>
+            <WrapPanel>
+                <TextBlock Text="{Binding Type1}" FontSize="20" />
+                <TextBlock Text="{Binding Type2}" FontSize="20" Margin="5,0,0,0"/>
+            </WrapPanel>
+        </StackPanel>
+
     </Grid>
 </Controls:MetroWindow>

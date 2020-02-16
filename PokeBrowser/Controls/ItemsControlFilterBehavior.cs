@@ -14,10 +14,10 @@ namespace PokeBrowser.Controls
     {
         public static readonly DependencyProperty FilterActionPathProperty =
             DependencyProperty.Register(
-                nameof(FilterActionPath), // プロパティ名を指定
-                typeof(string), // プロパティの型を指定
-                typeof(ItemsControlFilterBehavior), // プロパティを所有する型を指定
-                new PropertyMetadata(default)); // メタデータを指定。ここではデフォルト値を設定してる
+                nameof(FilterActionPath),
+                typeof(string),
+                typeof(ItemsControlFilterBehavior),
+                new PropertyMetadata(default));
 
         public string FilterActionPath
         {
