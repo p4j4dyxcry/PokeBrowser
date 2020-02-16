@@ -1,0 +1,101 @@
+﻿<Controls:MetroWindow
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" x:Class="PokeBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:PokeBrowser.Controls"
+        xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vms:MainWindowVm}"
+        Title="Pokemon Browser" Height="720" Width="1280">
+    <Window.Resources>
+        <controls:OffsetValueConverter Offset="-100" x:Key="100OffsetConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <controls:ItemsControlFilterBehavior x:Key="FilterBihavior" FilterActionPath="Filter"/>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="RaiseFilter" Messenger="{Binding Messenger}" >
+            <controls:MessageInvoker Target="{StaticResource FilterBihavior}"/>
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+    <StackPanel>
+        <TabControl>
+            <TabItem Header="ポケモン">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="600"/>
+                        <!--TODO 動的サイズ変更に対応する-->
+                        <!--<RowDefinition Height="{Binding Height , 
+                            RelativeSource={RelativeSource AncestorType=Window} , 
+                            Converter={StaticResource 100OffsetConverter} ,
+                            UpdateSourceTrigger=PropertyChanged}"/>-->
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" Margin="2">
+                        <ComboBox ItemsSource="{Binding IdFIlter}" SelectedIndex="0">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource MahApps.Styles.ComboBoxItem}">
+                                    <Setter Property="IsSelected" Value="{Binding IsEnabled}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+                        <TextBox Margin="5,0,0,0" Width="100"  Text="{Binding FilterText.Value , UpdateSourceTrigger=PropertyChanged}"/>
+                        <CheckBox Margin="5,0,0,0" Content="メガ進化表示" IsChecked="{Binding ShowMegaShinka.Value}"/>
+                        <CheckBox Margin="5,0,0,0" Content="禁止級伝説表示" IsChecked="{Binding ShowBanLegend.Value}"/>
+
+                    </WrapPanel>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding ItemsSource}"                              
+                              AutoGenerateColumns="False"
+                              VirtualizingStackPanel.IsVirtualizing="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              SelectionMode="Extended"
+                              SelectionUnit="CellOrRowHeader">
+                        <i:Interaction.Behaviors>
+                            <controls:ItemsControlBindableBehavior Binding="{StaticResource FilterBihavior}" />
+                        </i:Interaction.Behaviors>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding ID}"/>
+                            <DataGridTemplateColumn Header="名前" IsReadOnly="True" 
+                                                    SortMemberPath="Name"
+                                                    ClipboardContentBinding="{Binding Name}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <WrapPanel>
+                                            <Image Source="{Binding ImageSource}" Width="20" Height="20" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </WrapPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="タイプ1" IsReadOnly="True" Binding="{Binding Type1}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="タイプ2" IsReadOnly="True" Binding="{Binding Type2}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="ＨＰ" IsReadOnly="True" Binding="{Binding Hp}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="攻撃" IsReadOnly="True" Binding="{Binding Atack}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="防御" IsReadOnly="True" Binding="{Binding Defence}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="特攻" IsReadOnly="True" Binding="{Binding SpAtack}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="特防" IsReadOnly="True" Binding="{Binding SpDefence}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="素早" IsReadOnly="True" Binding="{Binding Speed}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="合計" IsReadOnly="True" Binding="{Binding Total}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="特性-１" IsReadOnly="True" Binding="{Binding Ability1}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="特性-２" IsReadOnly="True" Binding="{Binding Ability2}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="特性-夢" IsReadOnly="True" Binding="{Binding Ability3}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="最速" IsReadOnly="True" Binding="{Binding Fastest}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="準速" IsReadOnly="True" Binding="{Binding SemiFastest}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="無降" IsReadOnly="True" Binding="{Binding DefaultSpeed}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="最速スカ" IsReadOnly="True" Binding="{Binding FastestScarf}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="最遅" IsReadOnly="True" Binding="{Binding Lastest}"></DataGridTextColumn>                            
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="とくせい">
+                <Label Content="bbb"/>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</Controls:MetroWindow>
