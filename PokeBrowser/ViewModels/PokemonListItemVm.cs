@@ -28,10 +28,10 @@ namespace PokeBrowser.ViewModels
         public PokemonListItemVm(PokemonData pokemonData) : base(pokemonData)
         {
             ID = pokemonData.Id;
-            Fastest = Calculator.CalcParameter(pokemonData.Speed, 31, 252, 1.1, 50);
-            DefaultSpeed = Calculator.CalcParameter(pokemonData.Speed, 31, 0, 1.0, 50);
-            SemiFastest = Calculator.CalcParameter(pokemonData.Speed, 31, 252, 1.0, 50);
-            Latest = Calculator.CalcParameter(pokemonData.Speed,  0,   0, 0.9, 50);
+            Fastest = StatusCalculator.CalcParameter(pokemonData.Speed, 31, 252, 1.1, 50);
+            DefaultSpeed = StatusCalculator.CalcParameter(pokemonData.Speed, 31, 0, 1.0, 50);
+            SemiFastest = StatusCalculator.CalcParameter(pokemonData.Speed, 31, 252, 1.0, 50);
+            Latest = StatusCalculator.CalcParameter(pokemonData.Speed,  0,   0, 0.9, 50);
         }
     }
 }

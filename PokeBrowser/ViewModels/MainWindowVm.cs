@@ -151,6 +151,5 @@ namespace PokeBrowser.ViewModels
 
             return true;
         }
-
     }
 }

@@ -78,10 +78,11 @@ namespace PokeBrowser.Controls
         {
             if (c is TextBox textBox)
             {
+                if (string.IsNullOrEmpty(textBox.Text) is false)
+                    return false;
+
                 if (textBox.IsFocused)
                     return true;
-
-                return textBox.Text == string.Empty;
             }
             return false;
         }

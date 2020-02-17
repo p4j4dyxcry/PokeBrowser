@@ -1,8 +1,8 @@
 ﻿namespace PokeBrowser.Models
 {
-    public class Calculator
+    public class StatusCalculator
     {
-        public static int CalcHitPoint(int baseStat , int iv , int ev , double person , int level)
+        public static int CalcHitPoint(int baseStat , int iv , int ev ,int level)
         {
             return (int)((baseStat * 2 + iv + ev / 4) * level / 100 + level + 10);
         }
