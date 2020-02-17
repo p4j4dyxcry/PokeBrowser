@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\yuki.tsuneyama\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\yuki.tsuneyama\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_PokeBrowser.1712057896.00" t="ExcludeRecursive" />
+    <e p="D:\repositories\PokeBrowser" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="PokeBrowser" t="IncludeRecursive">
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controls" t="Include">
+          <e p="BindableBehavior.cs" t="Include" />
+          <e p="DoubleClickBehavior.cs" t="Include" />
+          <e p="ItemsControlFilterBehavior.cs" t="Include" />
+          <e p="ITriggerMessageAction.cs" t="Include" />
+          <e p="LabeledControl.cs" t="Include" />
+          <e p="LabeledControl.xaml" t="Include" />
+          <e p="LeftClickContextMenuBehavior.cs" t="Include" />
+          <e p="MessageInvoker.cs" t="Include" />
+          <e p="OffsetValueConverter.cs" t="Include" />
+          <e p="PercentConverter.cs" t="Include" />
+          <e p="ShowWindowTriggerAction.cs" t="Include" />
+          <e p="TextBlockSelectableService.cs" t="Include" />
+          <e p="TextBoxIntellisenseBehavior.cs" t="Include" />
+          <e p="WaterMarkTextService.cs" t="Include" />
+        </e>
+        <e p="Data" t="Include">
+          <e p="AbilityData.cs" t="Include" />
+          <e p="DataBase.cs" t="Include" />
+          <e p="MoveData.cs" t="Include" />
+          <e p="PersonalityData.cs" t="Include" />
+          <e p="PoemonType.cs" t="Include" />
+          <e p="PokemonData.cs" t="Include" />
+        </e>
+        <e p="Foundation" t="Include">
+          <e p="Constants.cs" t="Include" />
+          <e p="DelegateCommand.cs" t="Include" />
+          <e p="FastReflection.cs" t="Include" />
+          <e p="JsonExtensions.cs" t="Include" />
+          <e p="Operation" t="Include">
+            <e p="CompositeOperation.cs" t="Include" />
+            <e p="DelegateOperation.cs" t="Include" />
+            <e p="IMergeJudge.cs" t="Include" />
+            <e p="Internal" t="Include">
+              <e p="CapacityStack.cs" t="Include" />
+              <e p="ErrorMessages.cs" t="Include" />
+              <e p="UndoStack.cs" t="Include" />
+            </e>
+            <e p="IOperation.cs" t="Include" />
+            <e p="IOperationController.cs" t="Include" />
+            <e p="ListOperation.cs" t="Include" />
+            <e p="MergeableOperation.cs" t="Include" />
+            <e p="OperationBuilder.cs" t="Include" />
+            <e p="OperationBuilderInterfaces.cs" t="Include" />
+            <e p="OperationBuilderInternal.cs" t="Include" />
+            <e p="OperationController.cs" t="Include" />
+            <e p="OperationControllerExtensions.cs" t="Include" />
+            <e p="OperationExtensions.cs" t="Include" />
+            <e p="ThrottleMergeJudge.cs" t="Include" />
+          </e>
+          <e p="PropertyAccesser.cs" t="Include" />
+          <e p="StringAnalizer.cs" t="Include" />
+          <e p="StringExtensions.cs" t="Include" />
+        </e>
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="DataLoader.cs" t="Include" />
+          <e p="FilePath.cs" t="Include" />
+          <e p="Filters.cs" t="Include" />
+          <e p="ParameterData.cs" t="Include" />
+          <e p="PokemonParameterCalculator.cs" t="Include" />
+          <e p="StatusCaluclator.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="App.g.cs" t="Include" />
+              <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
+              <e p="MainWindow.g.cs" t="Include" />
+              <e p="PokeBrowser.AssemblyInfo.cs" t="Include" />
+              <e p="Views" t="Include">
+                <e p="DetailWindow.g.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="PokeBrowser.csproj" t="IncludeRecursive" />
+        <e p="ViewModels" t="Include">
+          <e p="FilterVm.cs" t="Include" />
+          <e p="MainWindowVm.cs" t="Include" />
+          <e p="ParameterVm.cs" t="Include" />
+          <e p="PokemonDetailVm.cs" t="Include" />
+          <e p="PokemonListItemVm.cs" t="Include" />
+          <e p="PokemonVm.cs" t="Include" />
+        </e>
+        <e p="Views" t="Include">
+          <e p="DetailWindow.xaml" t="Include" />
+          <e p="DetailWindow.xaml.cs" t="Include" />
+        </e>
+      </e>
+      <e p="PokeBrowser.sln" t="IncludeFlat" />
+      <e p="Scraper" t="IncludeRecursive">
+        <e p="Scraper.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+  </component>
+</project>
