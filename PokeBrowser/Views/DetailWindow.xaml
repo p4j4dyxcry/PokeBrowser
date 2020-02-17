@@ -3,39 +3,303 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:controls="clr-namespace:PokeBrowser.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:PokeBrowser.Views"
+    xmlns:data="clr-namespace:PokeBrowser.Data"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     Title="{Binding Name}"
     Width="700"
     Height="800"
-    d:DataContext="{d:DesignInstance Type={x:Type vms:PokemonVm}}"
+    Background="{StaticResource MahApps.Brushes.Window.Background}"
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
-    <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Controls:MetroWindow.Resources>
+        <controls:PercentConverter
+            x:Key="PercentConverter"
+            MaxValue="255"
+            Value="340" />
+    </Controls:MetroWindow.Resources>
+    <d:DesignProperties.DataContext>
+        <vms:PokemonVm />
+    </d:DesignProperties.DataContext>
+    <Grid
+        Margin="8"
+        Background="Transparent"
+        Focusable="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Image
-                Width="100"
-                Height="100"
-                HorizontalAlignment="Left"
-                Source="{Binding ImageSource}" />
-            <WrapPanel>
-                <TextBlock FontSize="20" Text="{Binding Type1}" />
-                <TextBlock
-                    Margin="5,0,0,0"
-                    FontSize="20"
-                    Text="{Binding Type2}" />
-            </WrapPanel>
-        </StackPanel>
+        <DockPanel LastChildFill="True">
+            <Expander
+                VerticalAlignment="Top"
+                DockPanel.Dock="Top"
+                Header="{Binding Name}"
+                IsExpanded="True">
+                <StackPanel>
+                    <Image
+                        Width="128"
+                        Height="128"
+                        HorizontalAlignment="Center"
+                        Source="{Binding ImageSource}" />
+                    <DockPanel DockPanel.Dock="Top">
+                        <GroupBox Header="タイプ">
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="4"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    Text="{Binding Type1}" />
+                                <TextBlock
+                                    Margin="4"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    Text="{Binding Type2}" />
+                            </StackPanel>
+                        </GroupBox>
 
+                        <GroupBox VerticalAlignment="Top" Header="とくせい">
+                            <StackPanel>
+                                <WrapPanel Margin="0,4">
+                                    <TextBlock
+                                        Margin="0,0,10,0"
+                                        controls:TextBlockSelectableService.IsSelectable="True"
+                                        Text="{Binding Ability1}" />
+                                    <TextBlock controls:TextBlockSelectableService.IsSelectable="True" Text="{Binding Ability2}" />
+                                </WrapPanel>
+                                <WrapPanel Margin="0,4">
+                                    <TextBlock
+                                        Margin="0,0,10,0"
+                                        controls:TextBlockSelectableService.IsSelectable="True"
+                                        Text="(隠)" />
+                                    <TextBlock controls:TextBlockSelectableService.IsSelectable="True" Text="{Binding Ability3}" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </DockPanel>
+                </StackPanel>
+            </Expander>
+
+            <GroupBox
+                VerticalAlignment="Top"
+                DockPanel.Dock="Bottom"
+                Header="わざ">
+                <ListView ItemsSource="{Binding Moves}" />
+            </GroupBox>
+        </DockPanel>
+
+
+        <StackPanel Grid.Column="2">
+            <Expander Header="種族値" IsExpanded="True">
+                <StackPanel>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="HP"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding Hp, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding Hp}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="攻撃"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding Attack, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding Attack}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="防御"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding Defense, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding Defense}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="特攻"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding SpAttack, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding SpAttack}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="特防"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding SpDefense, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding SpDefense}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl
+                        FontSize="20"
+                        Label="素早"
+                        LabelWidth="60">
+                        <Grid>
+                            <Border
+                                Width="{Binding Speed, Converter={StaticResource PercentConverter}}"
+                                HorizontalAlignment="Left"
+                                Background="DarkOrange"
+                                CornerRadius="2" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                FontSize="20"
+                                Text="{Binding Speed}" />
+                        </Grid>
+                    </controls:LabeledControl>
+                </StackPanel>
+            </Expander>
+            <Expander Header="ステータス計算" IsExpanded="True">
+                <StackPanel>
+                    <DockPanel LastChildFill="True">
+                        <WrapPanel Margin="4" DockPanel.Dock="Left">
+                            <TextBlock Text="個体値" VerticalAlignment="Center" Margin="0,0,5,0" Width="40"/>
+                            <Button Content="6V" Margin="0,0,5,0" Width="50"/>
+                            <Button Content="5VS0" Margin="0,0,5,0" Width="50"/>
+                            <Button Content="5VA0" Margin="0,0,5,0" Width="50"/>
+                            <Button Content="4VAS0" Margin="0,0,5,0" Width="50"/>
+                        </WrapPanel>
+                        <TextBox
+                            DockPanel.Dock="Right"
+                            Margin="4,4,12,4"
+                            MinWidth="70"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            HorizontalContentAlignment="Right"
+                            controls:TextBoxWatermarkService.Watermark="まじめ">
+                            <b:Interaction.Behaviors>
+                                <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Personalities}"/>
+                            </b:Interaction.Behaviors>
+                        </TextBox>
+                        <TextBlock
+                            DockPanel.Dock="Right"
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            controls:TextBlockSelectableService.IsSelectable="True"
+                            Text="性格" />
+                    </DockPanel>
+
+                    <WrapPanel Margin="4" DockPanel.Dock="Right">
+                        <TextBlock Text="努力値" VerticalAlignment="Center" Margin="0,0,5,0" Width="40"/>
+                        <Button Content="AS252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="CS252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="HB252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="HD252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="HS252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="HS252" Margin="0,0,5,0" Width="50"/>
+                        <Button Content="HS252" Margin="0,0,5,0" Width="50"/>
+                    </WrapPanel>
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="HP" HorizontalAlignment="Center" Margin="4"/>
+                        <TextBlock Grid.Column="3" Grid.Row="0" Text="攻撃" HorizontalAlignment="Center" Margin="4"/>
+                        <TextBlock Grid.Column="5" Grid.Row="0" Text="防御" HorizontalAlignment="Center" Margin="4"/>
+                        <TextBlock Grid.Column="7" Grid.Row="0" Text="特攻" HorizontalAlignment="Center" Margin="4"/>
+                        <TextBlock Grid.Column="9" Grid.Row="0" Text="特防" HorizontalAlignment="Center" Margin="4"/>
+                        <TextBlock Grid.Column="11" Grid.Row="0" Text="素早" HorizontalAlignment="Center" Margin="4"/>
+
+                        <TextBlock Text="個体値" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Grid.Row="1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="3" Grid.Row="1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="5" Grid.Row="1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="7" Grid.Row="1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="9" Grid.Row="1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="11" Grid.Row="1" VerticalAlignment="Top"/>
+
+                        <TextBlock Text="努力値" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Grid.Row="2"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="3" Grid.Row="2"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="5" Grid.Row="2"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="7" Grid.Row="2"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="9" Grid.Row="2"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="11" Grid.Row="2" VerticalAlignment="Top"/>
+
+                        <TextBlock Text="実数値" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1"  Grid.Row="3" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="3"  Grid.Row="3" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="5"  Grid.Row="3" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="7"  Grid.Row="3" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="9"  Grid.Row="3" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="11" Grid.Row="3" VerticalAlignment="Top"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+            <Expander Header="ダメージ計算" IsExpanded="True">
+            </Expander>
+        </StackPanel>
     </Grid>
 </Controls:MetroWindow>

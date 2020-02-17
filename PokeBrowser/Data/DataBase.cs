@@ -79,6 +79,11 @@ namespace PokeBrowser.Data
     {
         public static DataBase DataBase { get; private set; }
 
+
+        public static IEnumerable<string> Personalities => DataBase.Personalities.Select(x => x.Name);
+
+        public static IEnumerable<string> Moves => DataBase.Moves.Select(x => x.Name);
+
         public static void Initialize(DataBase dataBase)
         {
             DataBase = dataBase;

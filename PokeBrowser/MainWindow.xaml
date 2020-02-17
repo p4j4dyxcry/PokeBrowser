@@ -50,18 +50,21 @@
                             </ComboBox.ItemContainerStyle>
                         </ComboBox>
                         <TextBox
-                            Width="100"
+                            controls:TextBoxWatermarkService.Watermark="例:ガラル ニャース"
+                            Width="120"
                             Margin="5,0,0,0"
                             Text="{Binding FilterText.Value, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox
-                            Margin="5,0,0,0"
-                            Content="メガ進化表示"
-                            IsChecked="{Binding ShowMegaEvolution.Value}" />
-                        <CheckBox
-                            Margin="5,0,0,0"
-                            Content="禁止級伝説表示"
-                            IsChecked="{Binding ShowBanLegend.Value}" />
-
+                        <Button Content="・・・" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                            <i:Interaction.Behaviors>
+                                <controls:LeftClickContextMenuBehavior/>
+                            </i:Interaction.Behaviors>
+                            <Button.ContextMenu>
+                                <ContextMenu ToolTip="その他の設定">
+                                    <MenuItem Header="メガ進化表示" IsChecked="{Binding ShowMegaEvolution.Value}" IsCheckable="True"/>
+                                    <MenuItem Header="禁止級伝説表示" IsChecked="{Binding ShowBanLegend.Value}" IsCheckable="True"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
                     </WrapPanel>
                     <DataGrid
                         Grid.Row="1"
