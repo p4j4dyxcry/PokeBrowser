@@ -10,27 +10,27 @@ namespace PokeBrowser.ViewModels
 {
     public class PokemonVm : Livet.ViewModel
     {
-        public string Name { get; }
-        public string Type1 { get; }
-        public string Type2 { get; }
-        public int Hp { get; }
-        public int Attack { get; }
-        public int Defense { get; }
-        public int SpAttack { get; }
-        public int SpDefense { get; }
-        public int Speed { get; }
-        public int Total { get; }
-        public string Ability1 { get; }
-        public string Ability2 { get; }
-        public string Ability3 { get; }
-        public string Group1 { get; }
-        public string Group2 { get; }
-        public string[] Moves { get; }
-        public string ImageSource { get; protected set; }
+        public string Name { get; private set; }
+        public string Type1 { get; private set;}
+        public string Type2 { get;private set;}
+        public int Hp { get; private set;}
+        public int Attack { get; private set;}
+        public int Defense { get; private set;}
+        public int SpAttack { get; private set;}
+        public int SpDefense { get; private set;}
+        public int Speed { get; private set;}
+        public int Total { get; private set;}
+        public string Ability1 { get; private set;}
+        public string Ability2 { get; private set;}
+        public string Ability3 { get; private set; }
+        public string Group1 { get; private set;}
+        public string Group2 { get; private set;}
+        public string[] Moves { get; private set;}
+        public string ImageSource { get; private set; }
 
-        public PokemonData Model { get; }
+        public PokemonData Model { get; private set; }
 
-        public PokemonVm()
+        protected PokemonVm()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()) is false)
             {
@@ -101,6 +101,11 @@ namespace PokeBrowser.ViewModels
 
         public PokemonVm(PokemonData pokemonData)
         {
+            SetModel(pokemonData);
+        }
+
+        protected void SetModel(PokemonData pokemonData)
+        {
             Model = pokemonData;
 
             Name = pokemonData.Name;
@@ -139,6 +144,25 @@ namespace PokeBrowser.ViewModels
             Moves = pokemonData.Moves.ToArray();
 
             ImageSource = Path.Combine(FilePath.PokemonIconDirectoryPath, $"icon{pokemonData.Id}.gif");
+        }
+
+        protected void RaisePropertiesChange()
+        {
+            RaisePropertyChanged(nameof(Name));
+            RaisePropertyChanged(nameof(Hp));
+            RaisePropertyChanged(nameof(Attack));
+            RaisePropertyChanged(nameof(Defense));
+            RaisePropertyChanged(nameof(SpAttack));
+            RaisePropertyChanged(nameof(SpDefense));
+            RaisePropertyChanged(nameof(Speed));
+            RaisePropertyChanged(nameof(Total));
+            RaisePropertyChanged(nameof(Type1));
+            RaisePropertyChanged(nameof(Type2));
+            RaisePropertyChanged(nameof(Ability1));
+            RaisePropertyChanged(nameof(Ability2));
+            RaisePropertyChanged(nameof(Ability3));
+            RaisePropertyChanged(nameof(Moves));
+            RaisePropertyChanged(nameof(ImageSource));
         }
     }
 }

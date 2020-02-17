@@ -47,6 +47,9 @@ namespace PokeBrowser.Data
         public AbilityData FindAbility(string name) => _abliDictionary[name];
         public PersonalityData FindPersonality(string name) => _persDictionary[name];
         public PokemonData FindPokemon(string name , string form = null) => _pokemonDictionary[pokemon_hash(name,form)];
+        
+        public bool AnyPersonality(string name) => _persDictionary.ContainsKey(name);
+        public bool AnyPokemon(string name,string form = null) => _pokemonDictionary.ContainsKey(pokemon_hash(name,form));
 
         public static DataBase Build(IEnumerable<AbilityData> abilities,
                                      IEnumerable<TypeData> types,
@@ -100,6 +103,8 @@ namespace PokeBrowser.Data
         public static IEnumerable<string> Personalities => DataBase.Personalities.Select(x => x.Name);
 
         public static IEnumerable<string> Moves => DataBase.Moves.Select(x => x.Name);
+        
+        public static IEnumerable<string> Pokemons => DataBase.Pokemons.Select(x => x.Name);
 
         public static void Initialize(DataBase dataBase)
         {

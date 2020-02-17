@@ -44,6 +44,16 @@ namespace PokeBrowser.Models
         {
             Iv.Set(str);
         }
+        
+        public void SetIv(ParameterData<int> data)
+        {
+            Iv.CopyFrom(ref data);
+        }
+
+        public void SetEv(ParameterData<int> data)
+        {
+            Ev.CopyFrom(ref data);
+        }
 
         /// <summary>
         /// 個体値を設定する
@@ -52,28 +62,31 @@ namespace PokeBrowser.Models
         /// <param name="str"></param>
         public void SetPersonality(string str)
         {
+            Personality.Set(1,1,1,1,1,1);            
+            
+            if(DataBaseService.DataBase.AnyPersonality(str) is false)
+                return;
+            
             var personality = DataBaseService.DataBase.FindPersonality(str);
-            Personality.Set(1,1,1,1,1,1);
-
             if(personality.Up == PersonalityParameter.None)
                 return;
 
             switch (personality.Up)
             {
-                case PersonalityParameter.Atack:     Personality.Attack = 1.1; break;
-                case PersonalityParameter.Defence:   Personality.Attack = 1.1; break;
-                case PersonalityParameter.SpAtack:   Personality.Attack = 1.1; break;
-                case PersonalityParameter.SpDefence: Personality.Attack = 1.1; break;
-                case PersonalityParameter.Speed:     Personality.Attack = 1.1; break;
+                case PersonalityParameter.Atack:     Personality.Attack         = 1.1; break;
+                case PersonalityParameter.Defence:   Personality.Defense        = 1.1; break;
+                case PersonalityParameter.SpAtack:   Personality.SpecialAttack  = 1.1; break;
+                case PersonalityParameter.SpDefence: Personality.SpecialDefense = 1.1; break;
+                case PersonalityParameter.Speed:     Personality.Speed          = 1.1; break;
             }
 
             switch (personality.Down)
             {
-                case PersonalityParameter.Atack:     Personality.Attack = 0.9; break;
-                case PersonalityParameter.Defence:   Personality.Attack = 0.9; break;
-                case PersonalityParameter.SpAtack:   Personality.Attack = 0.9; break;
-                case PersonalityParameter.SpDefence: Personality.Attack = 0.9; break;
-                case PersonalityParameter.Speed:     Personality.Attack = 0.9; break; 
+                case PersonalityParameter.Atack:     Personality.Attack         = 0.9; break;
+                case PersonalityParameter.Defence:   Personality.Defense        = 0.9; break;
+                case PersonalityParameter.SpAtack:   Personality.SpecialAttack  = 0.9; break;
+                case PersonalityParameter.SpDefence: Personality.SpecialDefense = 0.9; break;
+                case PersonalityParameter.Speed:     Personality.Speed          = 0.9; break; 
             }
         }
 
@@ -99,7 +112,7 @@ namespace PokeBrowser.Models
             result.Hp = StatusCalculator.CalcHitPoint(Bv.Hp, Iv.Hp, Ev.Hp,level);
 
             // HP以外の計算式は同じなのでループで計算する
-            foreach (var i in Enumerable.Range(1, 6))
+            foreach (var i in Enumerable.Range(1,5))
             {
                 var bv = Bv.GetByIndex(i); // 種族値
                 var iv = Iv.GetByIndex(i); // 個体値
@@ -108,7 +121,30 @@ namespace PokeBrowser.Models
                 var param = StatusCalculator.CalcParameter(bv, iv, ev, person, level);
                 result.SetByIndex(i,param);
             }
+            return result;
+        }
+        
+        /// <summary>
+        /// 実数値から個体値を逆算する
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public ParameterData<int> CalcEv(int level , ParameterData<int> value)
+        {
+            var result = new ParameterData<int>();
+            result.Hp = StatusCalculator.CalcHitPointEv(Bv.Hp, Iv.Hp, value.Hp,level);
 
+            // HP以外の計算式は同じなのでループで計算する
+            foreach (var i in Enumerable.Range(1, 5))
+            {
+                var bv = Bv.GetByIndex(i); // 種族値
+                var iv = Iv.GetByIndex(i); // 個体値
+                var p   = value.GetByIndex(i);
+                var person = Personality.GetByIndex(i); // 性格補正
+                var param = StatusCalculator.CalcEv(bv, iv, p, person, level);
+                result.SetByIndex(i,param);
+            }
             return result;
         }
     }

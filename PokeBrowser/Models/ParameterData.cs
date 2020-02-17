@@ -8,7 +8,7 @@ namespace PokeBrowser.Models
     /// <summary>
     /// パラメータデータクラス
     /// </summary>
-    public class ParameterData<T> : NotificationObject 
+    public class ParameterData<T> : NotificationObject where T : struct, IComparable<T>
     {
         private T _hp;
         public T Hp
@@ -113,9 +113,40 @@ namespace PokeBrowser.Models
         {
             char[] separators = { ' ', ',', ';', '-' };
             int index = 0;
-            foreach (var value in parameters.Split(separators).Take(6).Select(double.Parse))
+            foreach (var value in parameters.Split(separators).Take(6))
             {
-                SetByIndex(index++, (T)(object)value);
+                if (typeof(T) == typeof(int))
+                {
+                    SetByIndex(index++, (T)(object)int.Parse(value));
+                }
+                else if (typeof(T) == typeof(double))
+                {
+                    SetByIndex(index++, (T)(object)double.Parse(value));
+                }
+                else if (typeof(T) == typeof(float))
+                {
+                    SetByIndex(index++, (T)(object)float.Parse(value));
+                }                
+                else if (typeof(T) == typeof(decimal))
+                {
+                    SetByIndex(index++, (T)(object)decimal.Parse(value));
+                }
+                else if (typeof(T) == typeof(long))
+                {
+                    SetByIndex(index++, (T)(object)long.Parse(value));
+                }
+                else if (typeof(T) == typeof(uint))
+                {
+                    SetByIndex(index++, (T)(object)uint.Parse(value));
+                }   
+                else if (typeof(T) == typeof(short))
+                {
+                    SetByIndex(index++, (T)(object)short.Parse(value));
+                } 
+                else if (typeof(T) == typeof(ushort))
+                {
+                    SetByIndex(index++, (T)(object)ushort.Parse(value));
+                }                   
             }
         }
 
@@ -145,8 +176,9 @@ namespace PokeBrowser.Models
                 case 3: SpecialAttack = value; break;
                 case 4: SpecialDefense = value; break;
                 case 5: Speed = value; break;
+                default:
+                    throw new IndexOutOfRangeException();
             }
-            throw new IndexOutOfRangeException();
         }
 
         /// <summary>

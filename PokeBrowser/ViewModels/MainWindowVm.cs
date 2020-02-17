@@ -31,7 +31,7 @@ namespace PokeBrowser.ViewModels
             ShowMegaEvolution = new ReactivePropertySlim<bool>().AddTo(CompositeDisposable);
             ShowBanLegend = new ReactivePropertySlim<bool>().AddTo(CompositeDisposable);
 
-            ShowDetailCommand = new DelegateCommand<INotifyPropertyChanged>(x => Messenger.Raise(new TransitionMessage(x, "ShowDetail")));
+            ShowDetailCommand = new DelegateCommand<PokemonListItemVm>(x => Messenger.Raise(new TransitionMessage(new PokemonDetailVm(x.Model), "ShowDetail")));
 
             var abilities = DataLoader.LoadAbilities();
             var types = DataLoader.LoadTypes();
