@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -66,8 +67,11 @@ namespace PokeBrowser.Controls
             }
         }
 
-        private static void ShowWatermark(TextBox control)
+        private static async void ShowWatermark(TextBox control)
         {
+            // コントロールのパラメータ解決が終わった後に実行したいので遅延させる
+            await Task.Delay(1);
+
             if (AdornerLayer.GetAdornerLayer(control) is { } layer)
             {
                 layer.Add(new TextBoxWatermarkAdorner(control, GetWatermark(control)));
@@ -83,6 +87,8 @@ namespace PokeBrowser.Controls
 
                 if (textBox.IsFocused)
                     return true;
+
+                return textBox.Text == string.Empty;
             }
             return false;
         }
