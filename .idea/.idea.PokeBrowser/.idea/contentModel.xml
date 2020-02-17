@@ -21,7 +21,6 @@
           <e p="MessageInvoker.cs" t="Include" />
           <e p="OffsetValueConverter.cs" t="Include" />
           <e p="PercentConverter.cs" t="Include" />
-          <e p="ShowWindowTriggerAction.cs" t="Include" />
           <e p="StyleBehaviorCollection.cs" t="Include" />
           <e p="TextBlockSelectableService.cs" t="Include" />
           <e p="TextBoxEnterKeyUpdateBehavior.cs" t="Include" />

@@ -4,6 +4,11 @@ namespace PokeBrowser.Models
 {
     public class Filters
     {
+        /// <summary>
+        /// メガシンカするポケモンをフィルタリングする
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool IsMegashinka(Data.PokemonData data)
         {
             if (data.Form is null)
@@ -11,6 +16,11 @@ namespace PokeBrowser.Models
             return data.Form.StartsWith("メガ");
         }
 
+        /// <summary>
+        /// 禁止級伝説をフィルタする
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool IsBanLegend(Data.PokemonData data)
         {
             var ids = new []

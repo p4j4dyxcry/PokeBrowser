@@ -4,6 +4,9 @@ using Microsoft.Xaml.Behaviors;
 
 namespace PokeBrowser.Controls
 {
+    /// <summary>
+    /// スタイルにビヘイビアを設定するためのクラス
+    /// </summary>
     public class StyleBehaviorCollection : FreezableCollection<Behavior>
     {
         public static readonly DependencyProperty StyleBehaviorsProperty =
@@ -13,6 +16,7 @@ namespace PokeBrowser.Controls
                 typeof(StyleBehaviorCollection), 
                 new PropertyMetadata((sender, e) =>
                 {
+                    // 2回目に設定された場合は前回の値をクリアしないので注意。
                     if (e.OldValue == e.NewValue) { return; }
 
                     var value = e.NewValue as StyleBehaviorCollection;

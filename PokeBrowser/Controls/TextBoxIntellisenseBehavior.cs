@@ -10,6 +10,9 @@ using Microsoft.Xaml.Behaviors;
 
 namespace PokeBrowser.Controls
 {
+    /// <summary>
+    /// テキストボックスにインテリセンスから指定させる機能を追加するビヘイビア
+    /// </summary>
     public class TextBoxIntellisenseBehavior : Behavior<TextBox>
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(

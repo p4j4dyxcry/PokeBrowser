@@ -6,6 +6,10 @@ using Microsoft.Xaml.Behaviors;
 
 namespace PokeBrowser.Controls
 {
+    /// <summary>
+    /// テキストボックスにインテリセンスから指定させる機能を追加するビヘイビア
+    /// </summary>
+
     public class TextBoxSelectAllBehavior : Behavior<TextBox>
     {        
         protected override void OnAttached()
@@ -28,7 +32,7 @@ namespace PokeBrowser.Controls
 
         private async void AssociatedObject_Focus(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(1);
+            await Task.Delay(10);
             AssociatedObject.SelectAll();
         }
     }

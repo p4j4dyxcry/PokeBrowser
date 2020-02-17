@@ -5,6 +5,9 @@ using System.Windows.Controls;
 
 namespace PokeBrowser.Controls
 {
+    /// <summary>
+    /// .net internal class を外部から無理やり扱うためのクラス
+    /// </summary>
     internal class InternalTextEditorHacker
     {
         private static Type InternalTextEditorType { get; }
@@ -55,6 +58,9 @@ namespace PokeBrowser.Controls
         }
     }
 
+    /// <summary>
+    /// TextBlockを選択可能にし、コピーができるようにする添付ビヘイビア
+    /// </summary>
     public static class TextBlockSelectableService
     {
         public static readonly DependencyProperty WatermarkProperty = DependencyProperty.RegisterAttached(

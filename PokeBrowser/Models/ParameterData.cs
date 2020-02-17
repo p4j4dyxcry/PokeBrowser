@@ -150,6 +150,10 @@ namespace PokeBrowser.Models
             }
         }
 
+        /// <summary>
+        /// 引数で渡されたパラメータをコピーして設定する
+        /// </summary>
+        /// <param name="refData"></param>
         public void CopyFrom(ref ParameterData<T> refData)
         {
             var refArray = refData.ToArray();

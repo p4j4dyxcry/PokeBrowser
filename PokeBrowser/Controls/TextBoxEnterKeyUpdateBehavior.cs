@@ -4,6 +4,9 @@ using Microsoft.Xaml.Behaviors;
 
 namespace PokeBrowser.Controls
 {
+    /// <summary>
+    /// テキストボックスをエンターでフォーカスを外すためのビヘイビア
+    /// </summary>
     public class TextBoxEnterKeyUpdateBehavior : Behavior<TextBox>
     {        
         protected override void OnAttached()

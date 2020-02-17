@@ -14,6 +14,9 @@ namespace PokeBrowser.Data
         Speed,
     }
 
+    /// <summary>
+    /// 性格データ
+    /// </summary>
     public class PersonalityData
     {
         public string Name { get; private set; }

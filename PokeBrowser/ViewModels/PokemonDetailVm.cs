@@ -18,10 +18,19 @@ namespace PokeBrowser.ViewModels
         /// </summary>
         public IReactiveProperty<string> Personality { get; }
         
+        /// <summary>
+        /// レベル
+        /// </summary>
         public IReactiveProperty<int> Level { get; }
         
-        public IReactiveProperty<string> Change { get; } 
+        /// <summary>
+        /// 検索ボックスからポケモンを変更する
+        /// </summary>
+        public IReactiveProperty<string> NameWithSearchBox { get; } 
         
+        /// <summary>
+        /// クリップボードにパラメータをコピーするための表示用値
+        /// </summary>
         public IReactiveProperty<string> ClipBoardParameter { get; }
 
         /// <summary>
@@ -34,22 +43,40 @@ namespace PokeBrowser.ViewModels
         /// </summary>
         public ParameterVm Iv { get; } 
         
+        /// <summary>
+        /// 計算済み実数値
+        /// </summary>
         public ParameterVm Param { get; }
         
+        /// <summary>
+        /// ステータス計算機
+        /// </summary>
         private PokemonParameterCalculator ParameterCalculator { get; } = new PokemonParameterCalculator();
 
+        /// <summary>
+        /// 個体値の合計と残りを表示するための値
+        /// </summary>
         public IReactiveProperty<string> TotalEv { get; }
         
+        /// <summary>
+        /// 個体値を設定するコマンド
+        /// </summary>
         public ICommand SetIvCommand { get; }
+        
+        /// <summary>
+        /// 努力値を設定するためのコマンド
+        /// </summary>
         public ICommand SetEvCommand { get; }
 
         public PokemonDetailVm()
         {
-            Ev = new ParameterVm(new ParameterData<int>());
-            Iv = new ParameterVm(new ParameterData<int>(31, 31, 31, 31, 31, 31));
-            Personality = new ReactivePropertySlim<string>(string.Empty);
+            // デザイナビューから利用
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="pokemonData"></param>
         public PokemonDetailVm(PokemonData pokemonData) : base(pokemonData)
         {
             ParameterCalculator.SetPokemon(pokemonData.Name , pokemonData.Form);
@@ -63,8 +90,8 @@ namespace PokeBrowser.ViewModels
             SetIvCommand = new DelegateCommand<string>(x=>Iv.Model.Set(x));
             SetEvCommand = new DelegateCommand<string>(x=>Ev.Model.Set(x));
             
-            Change = new ReactiveProperty<string>(string.Empty).AddTo(CompositeDisposable);
-            Change.Subscribe(_ => ChangePokemon(_, null)).AddTo(CompositeDisposable);
+            NameWithSearchBox = new ReactiveProperty<string>(string.Empty).AddTo(CompositeDisposable);
+            NameWithSearchBox.Subscribe(_ => ChangePokemon(_, null)).AddTo(CompositeDisposable);
 
              Observable.Merge(
                     Ev.Model.PropertyChangedAsObservable().ToUnit(),
@@ -89,7 +116,12 @@ namespace PokeBrowser.ViewModels
                 .AddTo(CompositeDisposable);
         }
 
-        void ChangePokemon(string name, string form)
+        /// <summary>
+        /// ポケモンを変更する
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="form"></param>
+        private void ChangePokemon(string name, string form)
         {
             if (DataBaseService.DataBase.AnyPokemon(name, form) is false)
                 return;
@@ -104,6 +136,7 @@ namespace PokeBrowser.ViewModels
         /// </summary>
         private void UpdateCalculator()
         {
+            // 計算機にパラメータを設定
             ParameterCalculator.SetEv(Ev.Model);
             ParameterCalculator.SetIv(Iv.Model);            
             ParameterCalculator.SetPersonality(Personality.Value);
@@ -114,27 +147,29 @@ namespace PokeBrowser.ViewModels
                 Param.Model.CopyFrom(ref param);
             }
 
-            //　実数値から個体値を逆算
+            //　実数値から努力値を逆算
             {
                 var param = ParameterCalculator.CalcEv(Level.Value,Param.Model);
                 Ev.Model.CopyFrom(ref param);
             }
 
-            var builder = new StringBuilder();
-
-            builder.Append($"{Name} {Personality.Value} ");
-
-            foreach (var i in Enumerable.Range(0,6))
+            // クリップボード用のテキストを作成
             {
-                builder.Append(Param.Model.GetByIndex(i));
-                
-                if(Ev.Model.GetByIndex(i) != 0)
-                    builder.Append($"({Ev.Model.GetByIndex(i)})");
-                if(i != 5)
-                    builder.Append('-');
-            }
+                var builder = new StringBuilder();
+                builder.Append($"{Name} {Personality.Value} ");
 
-            ClipBoardParameter.Value = builder.ToString();
+                foreach (var i in Enumerable.Range(0,6))
+                {
+                    builder.Append(Param.Model.GetByIndex(i));
+                
+                    if(Ev.Model.GetByIndex(i) != 0)
+                        builder.Append($"({Ev.Model.GetByIndex(i)})");
+                    if(i != 5)
+                        builder.Append('-');
+                }
+
+                ClipBoardParameter.Value = builder.ToString();                
+            }
         }
     }
 }

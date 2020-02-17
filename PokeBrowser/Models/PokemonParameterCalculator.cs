@@ -3,6 +3,9 @@ using PokeBrowser.Data;
 
 namespace PokeBrowser.Models
 {
+    /// <summary>
+    /// ステータス計算クラス
+    /// </summary>
     public class PokemonParameterCalculator
     {
         /// <summary>
@@ -36,6 +39,15 @@ namespace PokeBrowser.Models
         }
 
         /// <summary>
+        /// 努力値を設定する
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetEv(ParameterData<int> data)
+        {
+            Ev.CopyFrom(ref data);
+        }
+
+        /// <summary>
         /// 個体値を設定する
         /// ex "4-252-0-0-0-0"
         /// </summary>
@@ -44,20 +56,19 @@ namespace PokeBrowser.Models
         {
             Iv.Set(str);
         }
-        
+
+        /// <summary>
+        /// 個体値を設定する
+        /// </summary>
+        /// <param name="data"></param>
         public void SetIv(ParameterData<int> data)
         {
             Iv.CopyFrom(ref data);
         }
-
-        public void SetEv(ParameterData<int> data)
-        {
-            Ev.CopyFrom(ref data);
-        }
-
+ 
         /// <summary>
-        /// 個体値を設定する
-        /// ex "31-31-31-31-31-0"
+        /// 性格を設定する　/ 存在しない性格を指定した場合は上昇下降無しとなる
+        /// ex : "おくびょう"
         /// </summary>
         /// <param name="str"></param>
         public void SetPersonality(string str)
@@ -125,7 +136,7 @@ namespace PokeBrowser.Models
         }
         
         /// <summary>
-        /// 実数値から個体値を逆算する
+        /// 実数値から努力値を逆算する
         /// </summary>
         /// <param name="level"></param>
         /// <param name="value"></param>

@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace PokeBrowser.Data
 {
+    /// <summary>
+    /// タイプデータ
+    /// </summary>
     public class TypeData
     {
         public string Name { get; set; } = string.Empty;

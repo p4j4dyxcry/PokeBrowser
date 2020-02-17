@@ -61,7 +61,7 @@
                         Height="128"
                         HorizontalAlignment="Center"
                         Source="{Binding ImageSource}" />
-                    <TextBox Text="{Binding Change.Value}" Width="70" HorizontalAlignment="Left">
+                    <TextBox Text="{Binding NameWithSearchBox.Value}" Width="70" HorizontalAlignment="Left">
                         <b:Interaction.Behaviors>
                             <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}"/>
                         </b:Interaction.Behaviors>
@@ -334,9 +334,9 @@
                         <Button
                             Width="50"
                             Command="{Binding SetEvCommand}"
-                            CommandParameter="252-0-4-0-0-252"
+                            CommandParameter="0-0-0-0-0-0"
                             Margin="0,0,5,0"
-                            Content="HS252" />
+                            Content="0" />
                     </WrapPanel>
 
                     <Grid>
@@ -405,6 +405,7 @@
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
+                            Margin="4,0,0,0"
                             VerticalAlignment="Center"
                             Text="個体値" />
                         <TextBox
@@ -435,8 +436,6 @@
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="11"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Iv}"
                             Text="{Binding Speed.Value}" />
 
@@ -444,6 +443,7 @@
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
+                            Margin="4,0,0,0"
                             VerticalAlignment="Center"
                             Text="努力値" />
                         <TextBox
@@ -480,54 +480,41 @@
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="13"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
                             Text="{Binding TotalEv.Value}" />
                         <TextBlock
                             Grid.Row="3"
                             Grid.Column="0"
+                            Margin="4,0,0,0"
                             VerticalAlignment="Center"
                             Text="実数値" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="1"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding Hp.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="3"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding Attack.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="5"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding Defense.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="7"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding SpecialAttack.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="9"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding SpecialDefense.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="11"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
                             Text="{Binding Speed.Value}" />
                     </Grid>

@@ -43,7 +43,7 @@ namespace PokeBrowser.Models
 
 
         /// <summary>
-        /// タイプ情報をyamlに出力する
+        /// タイプ情報をjsonに出力する
         /// </summary>
         public static void SaveTypeToJson()
         {
