@@ -268,27 +268,25 @@
                                 CommandParameter="31-0-31-31-31-0"
                                 Margin="0,0,5,0"
                                 Content="4VAS0" />
+
+                            <TextBlock Text="Lv" Width="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox
+                                Width="35"
+                                Margin="0,0,5,0"
+                                Text="{Binding Level.Value}"
+                                controls:TextBoxWatermarkService.Watermark="レベル"/>
+                            
+                            <TextBox
+                                Width="50"
+                                Margin="0,0,5,0"
+                                Text="{Binding Personality.Value}"
+                                controls:TextBoxWatermarkService.Watermark="まじめ">
+                                <b:Interaction.Behaviors>
+                                    <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Personalities}" />
+                                </b:Interaction.Behaviors>
+                            </TextBox>
+                            
                         </WrapPanel>
-                        <TextBox
-                            MinWidth="70"
-                            Margin="4,4,12,4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
-                            Text="{Binding Personality.Value}"
-                            controls:TextBoxWatermarkService.Watermark="まじめ"
-                            DockPanel.Dock="Right">
-                            <b:Interaction.Behaviors>
-                                <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Personalities}" />
-                            </b:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBlock
-                            Margin="4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            controls:TextBlockSelectableService.IsSelectable="True"
-                            DockPanel.Dock="Right"
-                            Text="性格" />
                     </DockPanel>
 
                     <WrapPanel Margin="4" DockPanel.Dock="Right">
@@ -403,6 +401,7 @@
                             HorizontalAlignment="Center"
                             Text="素早" />
 
+                        <!--個体値-->
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
@@ -426,15 +425,11 @@
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="7"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Iv}"
                             Text="{Binding SpecialAttack.Value}" />
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="9"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Iv}"
                             Text="{Binding SpecialDefense.Value}" />
                         <TextBox
@@ -445,6 +440,7 @@
                             DataContext="{Binding Iv}"
                             Text="{Binding Speed.Value}" />
 
+                        <!--努力値-->
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
@@ -453,49 +449,39 @@
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="1"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding Hp.Value}" />
 
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="3"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding Attack.Value}" />
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="5"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding Defense.Value}" />
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="7"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding SpecialAttack.Value}" />
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="9"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding SpecialDefense.Value}" />
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="11"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Right"
                             DataContext="{Binding Ev}"
                             Text="{Binding Speed.Value}" />
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="13"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
                             Text="{Binding TotalEv.Value}" />
                         <TextBlock
                             Grid.Row="3"
@@ -529,7 +515,7 @@
                             VerticalAlignment="Top"
                             HorizontalContentAlignment="Right"
                             DataContext="{Binding Param}"
-                            Text="{Binding SpecialAttack.Value , UpdateSourceTrigger=Explicit}" />
+                            Text="{Binding SpecialAttack.Value}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="9"

@@ -18,6 +18,8 @@ namespace PokeBrowser.ViewModels
         /// </summary>
         public IReactiveProperty<string> Personality { get; }
         
+        public IReactiveProperty<int> Level { get; }
+        
         public IReactiveProperty<string> Change { get; } 
         
         public IReactiveProperty<string> ClipBoardParameter { get; }
@@ -55,6 +57,7 @@ namespace PokeBrowser.ViewModels
             Iv = new ParameterVm(new ParameterData<int>(31,31,31,31,31,31));
             Param = new ParameterVm(new ParameterData<int>());
             Personality = new ReactivePropertySlim<string>(string.Empty);
+            Level = new ReactiveProperty<int>(50).AddTo(CompositeDisposable);
             ClipBoardParameter = new ReactiveProperty<string>(string.Empty);
             
             SetIvCommand = new DelegateCommand<string>(x=>Iv.Model.Set(x));
@@ -67,7 +70,8 @@ namespace PokeBrowser.ViewModels
                     Ev.Model.PropertyChangedAsObservable().ToUnit(),
                     Iv.Model.PropertyChangedAsObservable().ToUnit(),
                     Param.Model.PropertyChangedAsObservable().ToUnit(),
-                    Personality.ToUnit())
+                    Personality.ToUnit(),
+                    Level.ToUnit())
                 .StartWith()
                 .Throttle(TimeSpan.FromMilliseconds(50))
                 .ObserveOnDispatcher()
@@ -106,13 +110,13 @@ namespace PokeBrowser.ViewModels
 
             // パラメータ計算
             {
-                var param = ParameterCalculator.Calc(50);
+                var param = ParameterCalculator.Calc(Level.Value);
                 Param.Model.CopyFrom(ref param);
             }
 
             //　実数値から個体値を逆算
             {
-                var param = ParameterCalculator.CalcEv(50,Param.Model);
+                var param = ParameterCalculator.CalcEv(Level.Value,Param.Model);
                 Ev.Model.CopyFrom(ref param);
             }
 
