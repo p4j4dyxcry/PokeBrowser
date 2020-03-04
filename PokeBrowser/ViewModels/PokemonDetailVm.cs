@@ -96,15 +96,25 @@ namespace PokeBrowser.ViewModels
              Observable.Merge(
                     Ev.Model.PropertyChangedAsObservable().ToUnit(),
                     Iv.Model.PropertyChangedAsObservable().ToUnit(),
-                    Param.Model.PropertyChangedAsObservable().ToUnit(),
                     Personality.ToUnit(),
                     Level.ToUnit())
                 .StartWith()
                 .Throttle(TimeSpan.FromMilliseconds(50))
                 .ObserveOnDispatcher()
                 .Do(_=>UpdateCalculator())
+                .Do(_ => UpdateFromParameter())
+                .Do(_ => GenerateClipBoardText())
                 .Subscribe()
                 .AddTo(CompositeDisposable);
+
+             Param.Model.PropertyChangedAsObservable()
+                 .StartWith()
+                 .Throttle(TimeSpan.FromMilliseconds(50))
+                 .ObserveOnDispatcher()
+                 .Do(_ => UpdateFromParameter())
+                 .Do(_ => GenerateClipBoardText())
+                 .Subscribe()
+                 .AddTo(CompositeDisposable);
             
             // 努力値合計と残努力値の適用
             TotalEv = Ev.Model
@@ -130,6 +140,13 @@ namespace PokeBrowser.ViewModels
             ParameterCalculator.SetPokemon(Model.Name , Model.Form);
             UpdateCalculator();
         }
+
+        private void UpdateFromParameter()
+        {
+            //　実数値から努力値を逆算
+            var param = ParameterCalculator.CalcEv(Level.Value,Param.Model);
+            Ev.Model.CopyFrom(ref param);
+        }
  
         /// <summary>
         /// 個体値・努力値・性格からパラメータを計算
@@ -141,18 +158,16 @@ namespace PokeBrowser.ViewModels
             ParameterCalculator.SetIv(Iv.Model);            
             ParameterCalculator.SetPersonality(Personality.Value);
 
-            // パラメータ計算
+            // 個体値/努力値からパラメータ計算
             {
                 var param = ParameterCalculator.Calc(Level.Value);
                 Param.Model.CopyFrom(ref param);
             }
+        }
 
-            //　実数値から努力値を逆算
-            {
-                var param = ParameterCalculator.CalcEv(Level.Value,Param.Model);
-                Ev.Model.CopyFrom(ref param);
-            }
-
+        private void GenerateClipBoardText()
+        {
+            
             // クリップボード用のテキストを作成
             {
                 var builder = new StringBuilder();
