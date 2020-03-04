@@ -37,6 +37,7 @@ namespace PokeBrowser.Data
         public MoveData[] Moves { get; private set; }
 
         private IDictionary<int, PokemonData> _pokemonDictionary = null;
+        private IDictionary<int, PokemonData> _pokemonDictionaryWithId = null;
         private IDictionary<int, PokemonData[]> _formDictionary = null;
         private IDictionary<string, PokemonType> _typeDictionary = null;
         private IDictionary<string, AbilityData>     _abliDictionary = null;
@@ -47,6 +48,9 @@ namespace PokeBrowser.Data
         public AbilityData FindAbility(string name) => _abliDictionary[name];
         public PersonalityData FindPersonality(string name) => _persDictionary[name];
         public PokemonData FindPokemon(string name , string form = null) => _pokemonDictionary[pokemon_hash(name,form)];
+        public PokemonData FindPokemon(int id) => _pokemonDictionaryWithId[id];
+
+        public PokemonData[] GetForms(int id) => _formDictionary.ContainsKey(id) ? _formDictionary[id] : Array.Empty<PokemonData>();
         
         public bool AnyPersonality(string name) => _persDictionary.ContainsKey(name);
         public bool AnyPokemon(string name,string form = null) => _pokemonDictionary.ContainsKey(pokemon_hash(name,form));
@@ -71,6 +75,7 @@ namespace PokeBrowser.Data
             db._persDictionary = db.Personalities.ToDictionary(x => x.Name, x => x);
             db._moveDictionary = db.Moves.ToDictionary(x => x.Name, x => x);
             db._pokemonDictionary = db.Pokemons.Concat(db.Forms).ToDictionary(x => pokemon_hash(x.Name, x.Form), x => x);
+            db._pokemonDictionaryWithId = db.Pokemons.ToDictionary(x => x.Id, x => x);
             db._formDictionary = db.Forms.GroupBy(x => x.Id).ToDictionary(x=>x.Key,x=>x.ToArray());
 
             foreach (var type in db.Types)

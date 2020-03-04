@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -11,6 +12,19 @@ using Reactive.Bindings.Extensions;
 
 namespace PokeBrowser.ViewModels
 {
+    public class PokemonFormVm : Livet.NotificationObject
+    {
+        public string DisplayName { get; }
+        
+        public PokemonData Model { get; }
+
+        public PokemonFormVm(PokemonData pokemonData)
+        {
+            Model = pokemonData;
+            DisplayName = pokemonData.Form ?? pokemonData.Name;
+        }
+    }
+    
     public class PokemonDetailVm : PokemonVm
     {
         /// <summary>
@@ -67,6 +81,10 @@ namespace PokeBrowser.ViewModels
         /// 努力値を設定するためのコマンド
         /// </summary>
         public ICommand SetEvCommand { get; }
+        
+        public ICommand ChangePokemonCommand { get; }
+        
+        public ObservableCollection<PokemonFormVm> Forms { get; } = new ObservableCollection<PokemonFormVm>();
 
         public PokemonDetailVm()
         {
@@ -79,6 +97,7 @@ namespace PokeBrowser.ViewModels
         /// <param name="pokemonData"></param>
         public PokemonDetailVm(PokemonData pokemonData) : base(pokemonData)
         {
+            UpdateFormSource();
             ParameterCalculator.SetPokemon(pokemonData.Name , pokemonData.Form);
             Ev = new ParameterVm(new ParameterData<int>());
             Iv = new ParameterVm(new ParameterData<int>(31,31,31,31,31,31));
@@ -89,6 +108,10 @@ namespace PokeBrowser.ViewModels
             
             SetIvCommand = new DelegateCommand<string>(x=>Iv.Model.Set(x));
             SetEvCommand = new DelegateCommand<string>(x=>Ev.Model.Set(x));
+            ChangePokemonCommand = new DelegateCommand<PokemonData>(x =>
+            {
+                ChangePokemon(x.Name,x.Form);
+            });
             
             NameWithSearchBox = new ReactiveProperty<string>(string.Empty).AddTo(CompositeDisposable);
             NameWithSearchBox.Subscribe(_ => ChangePokemon(_, null)).AddTo(CompositeDisposable);
@@ -136,9 +159,27 @@ namespace PokeBrowser.ViewModels
             if (DataBaseService.DataBase.AnyPokemon(name, form) is false)
                 return;
             SetModel(DataBaseService.DataBase.FindPokemon(name, form));
+            UpdateFormSource();
+
             RaisePropertiesChange();
             ParameterCalculator.SetPokemon(Model.Name , Model.Form);
+
             UpdateCalculator();
+            UpdateFromParameter();
+            GenerateClipBoardText();
+        }
+
+        private void UpdateFormSource()
+        {
+            var forms = DataBaseService.DataBase.GetForms(Model.Id);
+            Forms.Clear();
+            if (forms.Any())
+            {
+                var origin = DataBaseService.DataBase.FindPokemon(Model.Id);
+                Forms.Add(new PokemonFormVm(origin));
+                foreach (var f in forms)
+                    Forms.Add(new PokemonFormVm(f));
+            }
         }
 
         private void UpdateFromParameter()

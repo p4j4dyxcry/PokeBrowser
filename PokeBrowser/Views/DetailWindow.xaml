@@ -16,22 +16,22 @@
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
     <Controls:MetroWindow.Resources>
-        
+
         <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-            <Style.Setters >
-                <Setter Property="HorizontalContentAlignment" Value="Right"/>
-                <Setter Property="VerticalAlignment" Value="Top"/>
+            <Style.Setters>
+                <Setter Property="HorizontalContentAlignment" Value="Right" />
+                <Setter Property="VerticalAlignment" Value="Top" />
                 <Setter Property="controls:StyleBehaviorCollection.StyleBehaviors">
                     <Setter.Value>
                         <controls:StyleBehaviorCollection>
-                            <controls:TextBoxEnterKeyUpdateBehavior/>
-                            <controls:TextBoxSelectAllBehavior/>
+                            <controls:TextBoxEnterKeyUpdateBehavior />
+                            <controls:TextBoxSelectAllBehavior />
                         </controls:StyleBehaviorCollection>
                     </Setter.Value>
                 </Setter>
             </Style.Setters>
         </Style>
-        
+
         <controls:PercentConverter
             x:Key="PercentConverter"
             MaxValue="255"
@@ -40,488 +40,518 @@
     <d:DesignProperties.DataContext>
         <vms:PokemonDetailVm />
     </d:DesignProperties.DataContext>
-    <Grid
-        Margin="8"
-        Background="Transparent"
-        Focusable="True">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="8" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
-        <DockPanel LastChildFill="True">
-            <Expander
-                VerticalAlignment="Top"
-                DockPanel.Dock="Top"
-                Header="{Binding Name}"
-                IsExpanded="True">
-                <Grid>
-                    <Image
-                        Width="128"
-                        Height="128"
-                        HorizontalAlignment="Center"
-                        Source="{Binding ImageSource}" />
-                    <TextBox Text="{Binding NameWithSearchBox.Value}" Width="70" HorizontalAlignment="Left">
-                        <b:Interaction.Behaviors>
-                            <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}"/>
-                        </b:Interaction.Behaviors>
-                    </TextBox>
-                </Grid>
-            </Expander>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <WrapPanel Margin="8,8,8,4">
+            <TextBox Text="{Binding NameWithSearchBox.Value}" Width="70" HorizontalAlignment="Left"
+                     controls:TextBoxWatermarkService.Watermark="ポケモン名">
+                <b:Interaction.Behaviors>
+                    <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}" />
+                </b:Interaction.Behaviors>
+            </TextBox>
+            <ItemsControl ItemsSource="{Binding Forms}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding DisplayName}"
+                                Margin="4,0,0,0"
+                                CommandParameter="{Binding Model}"
+                                Command="{Binding DataContext.ChangePokemonCommand , RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </WrapPanel>
+        <Grid
+            Grid.Row="1"
+            Margin="8"
+            Background="Transparent"
+            Focusable="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-            <GroupBox DockPanel.Dock="Top" Header="タイプ">
-                <StackPanel>
-                    <TextBlock
-                        Margin="4"
-                        controls:TextBlockSelectableService.IsSelectable="True"
-                        Text="{Binding Type1}" />
-                    <TextBlock
-                        Margin="4"
-                        controls:TextBlockSelectableService.IsSelectable="True"
-                        Text="{Binding Type2}" />
-                </StackPanel>
-            </GroupBox>
+            <DockPanel LastChildFill="True">
+                <Expander
+                    VerticalAlignment="Top"
+                    DockPanel.Dock="Top"
+                    Header="{Binding Name}"
+                    IsExpanded="True">
+                    <Grid>
+                        <Image
+                            Width="128"
+                            Height="128"
+                            HorizontalAlignment="Center"
+                            Source="{Binding ImageSource}" />
+                    </Grid>
+                </Expander>
 
-            <GroupBox
-                VerticalAlignment="Top"
-                DockPanel.Dock="Top"
-                Header="とくせい">
-                <StackPanel>
-                    <WrapPanel Margin="0,4">
+                <GroupBox DockPanel.Dock="Top" Header="タイプ">
+                    <StackPanel>
                         <TextBlock
-                            Margin="0,0,10,0"
+                            Margin="4"
                             controls:TextBlockSelectableService.IsSelectable="True"
-                            Text="{Binding Ability1}" />
-                        <TextBlock controls:TextBlockSelectableService.IsSelectable="True" Text="{Binding Ability2}" />
-                    </WrapPanel>
-                    <WrapPanel Margin="0,4">
+                            Text="{Binding Type1}" />
                         <TextBlock
-                            Margin="0,0,10,0"
+                            Margin="4"
                             controls:TextBlockSelectableService.IsSelectable="True"
-                            Text="(隠)" />
-                        <TextBlock controls:TextBlockSelectableService.IsSelectable="True" Text="{Binding Ability3}" />
-                    </WrapPanel>
-                </StackPanel>
-            </GroupBox>
+                            Text="{Binding Type2}" />
+                    </StackPanel>
+                </GroupBox>
 
-            <GroupBox
-                VerticalAlignment="Top"
-                DockPanel.Dock="Bottom"
-                Header="わざ">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <DockPanel Margin="0,4" LastChildFill="True">
-                        <ComboBox SelectedIndex="0">
-                            <TextBlock Width="70" Text="威力130以上" />
-                        </ComboBox>
-                        <ComboBox SelectedIndex="0">
-                            <TextBlock Text="全て" />
-                        </ComboBox>
-                        <TextBox HorizontalContentAlignment="Right" controls:TextBoxWatermarkService.Watermark="タイプ" />
-                    </DockPanel>
-                    <ListView Grid.Row="1" ItemsSource="{Binding Moves}" />
-                </Grid>
-            </GroupBox>
-        </DockPanel>
+                <GroupBox
+                    VerticalAlignment="Top"
+                    DockPanel.Dock="Top"
+                    Header="とくせい">
+                    <StackPanel>
+                        <WrapPanel Margin="0,4">
+                            <TextBlock
+                                Margin="0,0,10,0"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                Text="{Binding Ability1}" />
+                            <TextBlock controls:TextBlockSelectableService.IsSelectable="True"
+                                       Text="{Binding Ability2}" />
+                        </WrapPanel>
+                        <WrapPanel Margin="0,4">
+                            <TextBlock
+                                Margin="0,0,10,0"
+                                controls:TextBlockSelectableService.IsSelectable="True"
+                                Text="(隠)" />
+                            <TextBlock controls:TextBlockSelectableService.IsSelectable="True"
+                                       Text="{Binding Ability3}" />
+                        </WrapPanel>
+                    </StackPanel>
+                </GroupBox>
 
+                <GroupBox
+                    VerticalAlignment="Top"
+                    DockPanel.Dock="Bottom"
+                    Header="わざ">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <DockPanel Margin="0,4" LastChildFill="True">
+                            <ComboBox SelectedIndex="0">
+                                <TextBlock Width="70" Text="威力130以上" />
+                            </ComboBox>
+                            <ComboBox SelectedIndex="0">
+                                <TextBlock Text="全て" />
+                            </ComboBox>
+                            <TextBox HorizontalContentAlignment="Right"
+                                     controls:TextBoxWatermarkService.Watermark="タイプ" />
+                        </DockPanel>
+                        <ListView Grid.Row="1" ItemsSource="{Binding Moves}" />
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
 
-        <StackPanel Grid.Column="2">
-            <Expander Header="種族値" IsExpanded="True">
-                <StackPanel>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="HP"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding Hp, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding Hp}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="攻撃"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding Attack, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding Attack}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="防御"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding Defense, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding Defense}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="特攻"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding SpAttack, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding SpAttack}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="特防"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding SpDefense, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding SpDefense}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                    <controls:LabeledControl
-                        FontSize="20"
-                        Label="素早"
-                        LabelWidth="60">
-                        <Grid>
-                            <Border
-                                Width="{Binding Speed, Converter={StaticResource PercentConverter}}"
-                                HorizontalAlignment="Left"
-                                Background="DarkOrange"
-                                CornerRadius="2" />
-                            <TextBlock
-                                HorizontalAlignment="Right"
-                                controls:TextBlockSelectableService.IsSelectable="True"
-                                FontSize="20"
-                                Text="{Binding Speed}" />
-                        </Grid>
-                    </controls:LabeledControl>
-                </StackPanel>
-            </Expander>
-            <Expander Header="ステータス計算" IsExpanded="True">
-                <StackPanel>
-                    <DockPanel LastChildFill="True">
-                        <WrapPanel Margin="4" DockPanel.Dock="Left">
+            <StackPanel Grid.Column="2">
+                <Expander Header="種族値" IsExpanded="True">
+                    <StackPanel>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="HP"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding Hp, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding Hp}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="攻撃"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding Attack, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding Attack}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="防御"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding Defense, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding Defense}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="特攻"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding SpAttack, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding SpAttack}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="特防"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding SpDefense, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding SpDefense}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl
+                            FontSize="20"
+                            Label="素早"
+                            LabelWidth="60">
+                            <Grid>
+                                <Border
+                                    Width="{Binding Speed, Converter={StaticResource PercentConverter}}"
+                                    HorizontalAlignment="Left"
+                                    Background="DarkOrange"
+                                    CornerRadius="2" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    FontSize="20"
+                                    Text="{Binding Speed}" />
+                            </Grid>
+                        </controls:LabeledControl>
+                    </StackPanel>
+                </Expander>
+                <Expander Header="ステータス計算" IsExpanded="True">
+                    <StackPanel>
+                        <DockPanel LastChildFill="True">
+                            <WrapPanel Margin="4" DockPanel.Dock="Left">
+                                <TextBlock
+                                    Width="40"
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Text="個体値" />
+                                <Button
+                                    Width="50"
+                                    Command="{Binding SetIvCommand}"
+                                    CommandParameter="31-31-31-31-31-31"
+                                    Margin="0,0,5,0"
+                                    Content="6V" />
+                                <Button
+                                    Width="50"
+                                    Command="{Binding SetIvCommand}"
+                                    CommandParameter="31-31-31-31-31-0"
+                                    Margin="0,0,5,0"
+                                    Content="5VS0" />
+                                <Button
+                                    Width="50"
+                                    Command="{Binding SetIvCommand}"
+                                    CommandParameter="31-0-31-31-31-31"
+                                    Margin="0,0,5,0"
+                                    Content="5VA0" />
+                                <Button
+                                    Width="50"
+                                    Command="{Binding SetIvCommand}"
+                                    CommandParameter="31-0-31-31-31-0"
+                                    Margin="0,0,5,0"
+                                    Content="4VAS0" />
+
+                                <TextBlock Text="Lv" Width="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBox
+                                    Width="35"
+                                    Margin="0,0,5,0"
+                                    Text="{Binding Level.Value}"
+                                    controls:TextBoxWatermarkService.Watermark="レベル" />
+
+                                <TextBox
+                                    Width="50"
+                                    Margin="0,0,5,0"
+                                    Text="{Binding Personality.Value}"
+                                    controls:TextBoxWatermarkService.Watermark="まじめ">
+                                    <b:Interaction.Behaviors>
+                                        <controls:TextBoxIntellisenseBehavior
+                                            ItemsSource="{x:Static data:DataBaseService.Personalities}" />
+                                    </b:Interaction.Behaviors>
+                                </TextBox>
+
+                            </WrapPanel>
+                        </DockPanel>
+
+                        <WrapPanel Margin="4" DockPanel.Dock="Right">
                             <TextBlock
                                 Width="40"
                                 Margin="0,0,5,0"
                                 VerticalAlignment="Center"
-                                Text="個体値" />
+                                Text="努力値" />
                             <Button
                                 Width="50"
-                                Command="{Binding SetIvCommand}"
-                                CommandParameter="31-31-31-31-31-31"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="4-252-0-0-0-252"
                                 Margin="0,0,5,0"
-                                Content="6V" />
+                                Content="AS252" />
                             <Button
                                 Width="50"
-                                Command="{Binding SetIvCommand}"
-                                CommandParameter="31-31-31-31-31-0"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="4-0-0-252-0-252"
                                 Margin="0,0,5,0"
-                                Content="5VS0" />
+                                Content="CS252" />
                             <Button
                                 Width="50"
-                                Command="{Binding SetIvCommand}"
-                                CommandParameter="31-0-31-31-31-31"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="252-0-252-0-4-0"
                                 Margin="0,0,5,0"
-                                Content="5VA0" />
+                                Content="HB252" />
                             <Button
                                 Width="50"
-                                Command="{Binding SetIvCommand}"
-                                CommandParameter="31-0-31-31-31-0"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="252-0-4-0-252-0"
                                 Margin="0,0,5,0"
-                                Content="4VAS0" />
-
-                            <TextBlock Text="Lv" Width="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBox
-                                Width="35"
-                                Margin="0,0,5,0"
-                                Text="{Binding Level.Value}"
-                                controls:TextBoxWatermarkService.Watermark="レベル"/>
-                            
-                            <TextBox
+                                Content="HD252" />
+                            <Button
                                 Width="50"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="252-252-0-0-0-4"
                                 Margin="0,0,5,0"
-                                Text="{Binding Personality.Value}"
-                                controls:TextBoxWatermarkService.Watermark="まじめ">
-                                <b:Interaction.Behaviors>
-                                    <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Personalities}" />
-                                </b:Interaction.Behaviors>
-                            </TextBox>
-                            
+                                Content="HA252" />
+                            <Button
+                                Width="50"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="252-0-0-252-0-4"
+                                Margin="0,0,5,0"
+                                Content="HC252" />
+                            <Button
+                                Width="50"
+                                Command="{Binding SetEvCommand}"
+                                CommandParameter="0-0-0-0-0-0"
+                                Margin="0,0,5,0"
+                                Content="0" />
                         </WrapPanel>
-                    </DockPanel>
 
-                    <WrapPanel Margin="4" DockPanel.Dock="Right">
-                        <TextBlock
-                            Width="40"
-                            Margin="0,0,5,0"
-                            VerticalAlignment="Center"
-                            Text="努力値" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="4-252-0-0-0-252"
-                            Margin="0,0,5,0"
-                            Content="AS252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="4-0-0-252-0-252" 
-                            Margin="0,0,5,0"
-                            Content="CS252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="252-0-252-0-4-0" 
-                            Margin="0,0,5,0"
-                            Content="HB252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="252-0-4-0-252-0"
-                            Margin="0,0,5,0"
-                            Content="HD252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="252-252-0-0-0-4"
-                            Margin="0,0,5,0"
-                            Content="HA252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="252-0-0-252-0-4"
-                            Margin="0,0,5,0"
-                            Content="HC252" />
-                        <Button
-                            Width="50"
-                            Command="{Binding SetEvCommand}"
-                            CommandParameter="0-0-0-0-0-0"
-                            Margin="0,0,5,0"
-                            Content="0" />
-                    </WrapPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="HP" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="攻撃" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="5"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="防御" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="7"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="特攻" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="9"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="特防" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="11"
+                                Margin="4"
+                                HorizontalAlignment="Center"
+                                Text="素早" />
 
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="HP" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="3"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="攻撃" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="5"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="防御" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="7"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="特攻" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="9"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="特防" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="11"
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="素早" />
+                            <!--個体値-->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="個体値" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding Hp.Value}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding Attack.Value}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="5"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding Defense.Value}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="7"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding SpecialAttack.Value}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="9"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding SpecialDefense.Value}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="11"
+                                DataContext="{Binding Iv}"
+                                Text="{Binding Speed.Value}" />
 
-                        <!--個体値-->
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="4,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="個体値" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding Hp.Value}" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="3"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding Attack.Value}" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="5"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding Defense.Value}" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="7"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding SpecialAttack.Value}" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="9"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding SpecialDefense.Value}" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="11"
-                            DataContext="{Binding Iv}"
-                            Text="{Binding Speed.Value}" />
+                            <!--努力値-->
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="努力値" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding Hp.Value}" />
 
-                        <!--努力値-->
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="4,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="努力値" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding Hp.Value}" />
-
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="3"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding Attack.Value}" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="5"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding Defense.Value}" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="7"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding SpecialAttack.Value}" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="9"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding SpecialDefense.Value}" />
-                        <TextBox
-                            Grid.Row="2"
-                            Grid.Column="11"
-                            DataContext="{Binding Ev}"
-                            Text="{Binding Speed.Value}" />
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="13"
-                            Text="{Binding TotalEv.Value}" />
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="4,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="実数値" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            DataContext="{Binding Param}"
-                            Text="{Binding Hp.Value}" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="3"
-                            DataContext="{Binding Param}"
-                            Text="{Binding Attack.Value}" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="5"
-                            DataContext="{Binding Param}"
-                            Text="{Binding Defense.Value}" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="7"
-                            DataContext="{Binding Param}"
-                            Text="{Binding SpecialAttack.Value}" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="9"
-                            DataContext="{Binding Param}"
-                            Text="{Binding SpecialDefense.Value}" />
-                        <TextBox
-                            Grid.Row="3"
-                            Grid.Column="11"
-                            DataContext="{Binding Param}"
-                            Text="{Binding Speed.Value}" />
-                    </Grid>
-                    <TextBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Text="{Binding ClipBoardParameter.Value}"></TextBox>
-                </StackPanel>
-            </Expander>
-            <Expander Header="ダメージ計算" IsExpanded="True" />
-        </StackPanel>
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding Attack.Value}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="5"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding Defense.Value}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="7"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding SpecialAttack.Value}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="9"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding SpecialDefense.Value}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="11"
+                                DataContext="{Binding Ev}"
+                                Text="{Binding Speed.Value}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="13"
+                                Text="{Binding TotalEv.Value}" />
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="実数値" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                DataContext="{Binding Param}"
+                                Text="{Binding Hp.Value}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="3"
+                                DataContext="{Binding Param}"
+                                Text="{Binding Attack.Value}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="5"
+                                DataContext="{Binding Param}"
+                                Text="{Binding Defense.Value}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="7"
+                                DataContext="{Binding Param}"
+                                Text="{Binding SpecialAttack.Value}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="9"
+                                DataContext="{Binding Param}"
+                                Text="{Binding SpecialDefense.Value}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="11"
+                                DataContext="{Binding Param}"
+                                Text="{Binding Speed.Value}" />
+                        </Grid>
+                        <TextBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
+                                 Text="{Binding ClipBoardParameter.Value}" />
+                    </StackPanel>
+                </Expander>
+                <Expander Header="ダメージ計算" IsExpanded="True" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>
