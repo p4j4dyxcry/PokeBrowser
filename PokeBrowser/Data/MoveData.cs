@@ -59,5 +59,24 @@
         /// 自分 / 相手 /　場 / 味方 ... 等
         /// </summary>
         public string Taget { get; set; }
+
+        public MoveData Clone()
+        {
+            return new MoveData()
+            {
+                Name = Name,
+                Description = Description,
+                Type =  Type,
+                IsContact = IsContact,
+                Power = Power,
+                PowerPoint = PowerPoint,
+                DaiMaxPower = DaiMaxPower,
+                IsWall = IsWall,
+                Acc = Acc,
+                Class = Class,
+                Taget = Taget
+            };
+        }
+        
     }
 }

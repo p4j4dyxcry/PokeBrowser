@@ -31,10 +31,12 @@
         <e p="Data" t="Include">
           <e p="AbilityData.cs" t="Include" />
           <e p="DataBase.cs" t="Include" />
+          <e p="Item.cs" t="Include" />
           <e p="MoveData.cs" t="Include" />
           <e p="PersonalityData.cs" t="Include" />
           <e p="PoemonType.cs" t="Include" />
           <e p="PokemonData.cs" t="Include" />
+          <e p="StatusAilment.cs" t="Include" />
         </e>
         <e p="Foundation" t="Include">
           <e p="Constants.cs" t="Include" />
@@ -69,6 +71,7 @@
         <e p="MainWindow.xaml" t="Include" />
         <e p="MainWindow.xaml.cs" t="Include" />
         <e p="Models" t="Include">
+          <e p="DamageCalculator.cs" t="Include" />
           <e p="DataLoader.cs" t="Include" />
           <e p="FilePath.cs" t="Include" />
           <e p="Filters.cs" t="Include" />
