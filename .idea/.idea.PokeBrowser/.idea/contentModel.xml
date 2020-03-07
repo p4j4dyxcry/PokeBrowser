@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\yuki.tsuneyama\.Rider2019.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\yuki.tsuneyama\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_PokeBrowser.1712057896.00" t="ExcludeRecursive" />
-    <e p="D:\repositories\PokeBrowser" t="IncludeFlat">
+    <e p="C:\Users\勇希\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\勇希\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_PokeBrowser.-290809398.00" t="ExcludeRecursive" />
+    <e p="D:\repository\PokeBrowser" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="PokeBrowser" t="IncludeRecursive">
         <e p="App.xaml" t="Include" />
@@ -81,6 +81,15 @@
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
+            <e p="net461" t="Include">
+              <e p="App.g.cs" t="Include" />
+              <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
+              <e p="MainWindow.g.cs" t="Include" />
+              <e p="PokeBrowser.AssemblyInfo.cs" t="Include" />
+              <e p="Views" t="Include">
+                <e p="DetailWindow.g.cs" t="Include" />
+              </e>
+            </e>
             <e p="netcoreapp3.1" t="Include">
               <e p="App.g.cs" t="Include" />
               <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
@@ -108,6 +117,16 @@
       </e>
       <e p="PokeBrowser.sln" t="IncludeFlat" />
       <e p="Scraper" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="Scraper.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Programs.cs" t="Include" />
         <e p="Scraper.csproj" t="IncludeRecursive" />
       </e>
     </e>

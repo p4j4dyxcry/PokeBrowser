@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
 using PokeBrowser.Data;
 
 namespace PokeBrowser.Models
@@ -103,7 +101,7 @@ namespace PokeBrowser.Models
         private PokemonInformation _attackInfo;
         private PokemonInformation _defenceInfo;
 
-        private IList<Strategy> PowerStrategies = new List<Strategy>();
+        private readonly IList<Strategy> _powerStrategies;
         private IList<Strategy> AttackStrategies = new List<Strategy>();
 
         private IList<Strategy> DefenseStrategies = new List<Strategy>();
@@ -111,7 +109,7 @@ namespace PokeBrowser.Models
 
         public DamageCalculator()
         {
-            PowerStrategies = CreatePowerStrategies().ToList();
+            _powerStrategies = CreatePowerStrategies().ToList();
         }
         
         /// <summary>
@@ -249,6 +247,18 @@ namespace PokeBrowser.Models
         public DamageCalculator Wall(Wall w)
         {
             _battleField.Wall = w;
+            return this;
+        }
+        
+        public DamageCalculator PokemonChanged(bool flag = true)
+        {
+            _isPokemonChanged = flag;
+            return this;
+        }
+        
+        public DamageCalculator FirstAttack(bool flag = true)
+        {
+            _isFirst = flag;
             return this;
         }
 
@@ -428,7 +438,7 @@ namespace PokeBrowser.Models
         {
             var power = (double)_moveData.Power;
 
-            foreach (var strategy in PowerStrategies)
+            foreach (var strategy in _powerStrategies)
             {
                 if (strategy.QueryEnabled())
                     power *= strategy.Calc();
