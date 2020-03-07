@@ -18,11 +18,11 @@
     <Window.Resources>
         <controls:OffsetValueConverter x:Key="100OffsetConverter" Offset="-100" />
         <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
-        <controls:ItemsControlFilterBehavior x:Key="FilterBihavior" FilterActionPath="Filter" />
+        <controls:ItemsControlFilterBehavior x:Key="FilterBehavior" FilterActionPath="Filter" />
     </Window.Resources>
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="RaiseFilter" Messenger="{Binding Messenger}">
-            <controls:MessageInvoker Target="{StaticResource FilterBihavior}" />
+            <controls:MessageInvoker Target="{StaticResource FilterBehavior}" />
         </l:InteractionMessageTrigger>
         <l:InteractionMessageTrigger MessageKey="ShowDetail" Messenger="{Binding Messenger}">
             <l:TransitionInteractionMessageAction Mode="Normal" WindowType="{x:Type views:DetailView}" />
@@ -83,7 +83,7 @@
                             </Style>
                         </DataGrid.RowStyle>
                         <i:Interaction.Behaviors>
-                            <controls:ItemsControlBindableBehavior Binding="{StaticResource FilterBihavior}" />
+                            <controls:ItemsControlBindableBehavior Binding="{StaticResource FilterBehavior}" />
                         </i:Interaction.Behaviors>
                         <DataGrid.Columns>
                             <DataGridTextColumn
@@ -96,7 +96,7 @@
                                 IsReadOnly="True"
                                 SortMemberPath="Name">
                                 <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate DataType="{x:Type vms:PokemonVm}">
                                         <WrapPanel>
                                             <i:Interaction.Behaviors>
                                                 <controls:DoubleClickBehavior Command="{Binding DataContext.ShowDetailCommand, Mode=OneWay, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}" />
