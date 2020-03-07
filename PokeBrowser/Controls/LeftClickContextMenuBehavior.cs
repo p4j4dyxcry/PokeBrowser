@@ -14,6 +14,7 @@ namespace PokeBrowser.Controls
                 if (AssociatedObject.ContextMenu != null)
                 {
                     AssociatedObject.ContextMenu.IsOpen = true;
+                    AssociatedObject.ContextMenu.PlacementTarget = AssociatedObject;
                     e.Handled = true;
                 }
             };
