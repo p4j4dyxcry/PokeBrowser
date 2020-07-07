@@ -319,7 +319,7 @@ namespace PokeBrowser.Models
             return this;
         }
         
-        public DamageCalculator 天気(WeatherType w)
+        public DamageCalculator Weather(WeatherType w)
         {
             _battleField.Weather = w;
             return this;
@@ -330,18 +330,30 @@ namespace PokeBrowser.Models
             _moveData = CreateMoveDataFromAbility();
             var baseDamage = (int)(_attackInfo.Level * 2 / 5d + 2d);
 
-            var damage = (baseDamage * CalcAttack() * CalcPower() / CalcDefence());
+            // 攻め手の特性・アイテムを考慮した攻撃力 or 特攻 の補正計算
+            var damage = baseDamage * CalcAttack();
+            
+            // 攻め手の特性・アイテムを考慮した技威力の補正計算
+            damage *= CalcPower();
+            
+            // 受け手側の特性・アイテムを考慮した防御 or 特防を計算
+            damage *= CalcDefence();
+
             damage = damage.truncation();
 
             damage = damage / 50d + 2;
             damage = damage.truncation();
 
+            // 天気補正を計算
             damage *= CalcWeather().real();
 
+            // タイプ一致補正の計算
             damage *= TypeMatchBonus().real();
 
+            // タイプ相性補正の計算
             damage *= TypeEffectBonus().real();
             
+            // タイプ相性が無効の場合は0ダメージとする。
             if ((int) damage is 0)
             {
                 return new DamageResult()
@@ -351,6 +363,7 @@ namespace PokeBrowser.Models
                 };
             }
 
+            // 状態異常補正(やけど)の計算
             damage *= StatusAilmentBonus().real();
             
             var minDamage = damage * 0.85;
@@ -483,8 +496,16 @@ namespace PokeBrowser.Models
         private double CalcAttack()
         {
             if (_moveData?.Class == "特殊")
-                return _attackInfo.Parameter.SpecialAttack;
+            {
+                if (_attackInfo.Item.Name == "でんきだま" && _attackInfo.Name == "ピカチュウ")
+                    return _attackInfo.Parameter.SpecialAttack * 2.0;
+                
+                return _attackInfo.Parameter.SpecialAttack;                
+            }
 
+            if (_attackInfo.Item.Name == "でんきだま" && _attackInfo.Name == "ピカチュウ")
+                return _attackInfo.Parameter.Attack * 2.0;
+            
             if (_attackInfo.Item.Name == "ふといほね" && (_attackInfo.Name == "カラカラ" || _attackInfo.Name == "ガラガラ"))
                 return _attackInfo.Parameter.Attack * 2.0;
 

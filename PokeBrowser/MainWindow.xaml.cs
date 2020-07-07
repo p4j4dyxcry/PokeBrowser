@@ -47,7 +47,7 @@ namespace PokeBrowser
                     Ability = DataBaseService.DataBase.FindAbility("ふゆう"),
                     Type1 = DataBaseService.DataBase.FindType("エスパー"),
                 })
-                .天気(WeatherType.Rock)
+                .Weather(WeatherType.Rock)
                 .Move(new MoveData()
                 {
                     Name = "ストーンエッジ",
