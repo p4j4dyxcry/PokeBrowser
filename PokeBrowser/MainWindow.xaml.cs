@@ -27,12 +27,13 @@ namespace PokeBrowser
             damageCalculator
                 .AttackPokemon(new PokemonInformation()
                 {
+                    Name = "ガブリアス",
                     Level = 50,
                     Parameter = new ParameterData<int>()
                     {
                         Attack = 182,
                     },
-                    Ability = DataBaseService.DataBase.FindAbility("すなのちから"),
+                    Ability = DataBaseService.DataBase.FindAbility("すながくれ"),
                     Type1 = DataBaseService.DataBase.FindType("ドラゴン"),
                     Type2 = DataBaseService.DataBase.FindType("じめん"),
                 })
@@ -46,7 +47,7 @@ namespace PokeBrowser
                     Ability = DataBaseService.DataBase.FindAbility("ふゆう"),
                     Type1 = DataBaseService.DataBase.FindType("エスパー"),
                 })
-                .天気(天気.砂)
+                .天気(WeatherType.Rock)
                 .Move(new MoveData()
                 {
                     Name = "ストーンエッジ",

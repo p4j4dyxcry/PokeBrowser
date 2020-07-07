@@ -8,29 +8,32 @@ namespace PokeBrowser.Models
     public enum Field
     {
         None,
-        エレキフィールド,
-        ミストフィールド,
+        Electric,
+        Mist,
+        Psycho,
+        Glass,
     }
 
-    public enum 天気
+    public enum WeatherType
     {
         None,
-        晴,
-        雨,
-        砂,
+        Sun,
+        Rain,
+        Rock,
+        Ice,
     }
 
     public enum Wall
     {
         None = 0x00,
-        ひかりのかべ = 0x01,
-        リフレクター  = 0x10,
+        Special = 0x01,
+        Physical  = 0x10,
     }
 
-    public class バトルフィールド
+    public class BattleFieldInformation
     {
         public Field Field { get; set; }
-        public 天気 天気 { get; set; }
+        public WeatherType Weather { get; set; }
         
         public Wall Wall { get; set; }
     }
@@ -50,6 +53,7 @@ namespace PokeBrowser.Models
 
     public class PokemonInformation
     {
+        public string Name { get; set; }
         // パラメータ
         public ParameterData<int> Parameter { get; set; }
 
@@ -66,6 +70,11 @@ namespace PokeBrowser.Models
         public StatusAilment StatusAilment { get; set; }
         
         public Gender Gender { get; set; }
+
+        public bool ContainType(string type)
+        {
+            return Type1.Name == type || Type2.Name == type;
+        }
     }
 
     public class Strategy
@@ -92,7 +101,7 @@ namespace PokeBrowser.Models
 
     public class DamageCalculator
     {
-        private バトルフィールド _battleField = new バトルフィールド();
+        private BattleFieldInformation _battleField = new BattleFieldInformation();
         private bool _isCritical = false;
         private bool _isFirst; // 先行
         private bool _isPokemonChanged;
@@ -168,7 +177,7 @@ namespace PokeBrowser.Models
 
             yield return new Strategy(
                 () => _attackInfo.Ability.Name == "すなのちから" &&
-                      _battleField.天気 == Models.天気.砂 && 
+                      _battleField.Weather == WeatherType.Rock && 
                        new []{"いわ","はがね","じめん"}.Any( x=>x == _moveData.Type),　
                 () => 1.3);
             
@@ -229,6 +238,30 @@ namespace PokeBrowser.Models
                       _moveData.Type == "ノーマル",
                 () => 1.5);
             
+            yield return new Strategy(
+                () => _defenceInfo.Ability?.Name == "もふもふ" &&
+                      _moveData.IsContact,
+                () => 0.5);
+            
+            yield return new Strategy(
+                () => _defenceInfo.Ability?.Name == "もふもふ" &&
+                      _moveData.Type == "ほのお",
+                () => 2.0);
+            
+            yield return new Strategy(
+                () => _defenceInfo.Ability?.Name == "たいねつ" &&
+                      _moveData.Type == "ほのお",
+                () => 0.5);
+            
+            yield return new Strategy(
+                () => _defenceInfo.Ability?.Name == "ハードロック" &&
+                      TypeEffectBonus() > 1.1,
+                () => 0.75);
+            yield return new Strategy(
+                () => _defenceInfo.Ability?.Name == "フィルター" &&
+                      TypeEffectBonus() > 1.1,
+                () => 0.75);
+            
             // TODO パワースポット、オーラブレイク、フェアリーオーラ、ダークオーラ
         }
         
@@ -270,7 +303,7 @@ namespace PokeBrowser.Models
 
         public DamageCalculator ResetBattleField()
         {
-            _battleField = new バトルフィールド();
+            _battleField = new BattleFieldInformation();
             return this;
         }
             
@@ -286,9 +319,9 @@ namespace PokeBrowser.Models
             return this;
         }
         
-        public DamageCalculator 天気(天気 w)
+        public DamageCalculator 天気(WeatherType w)
         {
-            _battleField.天気 = w;
+            _battleField.Weather = w;
             return this;
         }
 
@@ -417,15 +450,15 @@ namespace PokeBrowser.Models
         /// <returns></returns>
         private double CalcWeather()
         {
-            switch (_battleField.天気)
+            switch (_battleField.Weather)
             {
-                case Models.天気.None:
+                case WeatherType.None:
                     return 1d;
-                case Models.天気.晴 when _moveData.Type == "ほのお":
-                case Models.天気.雨 when _moveData.Type == "みず":
+                case WeatherType.Sun when _moveData.Type == "ほのお":
+                case WeatherType.Rain when _moveData.Type == "みず":
                     return 1.5d;
-                case Models.天気.晴 when _moveData.Type == "みず":
-                case Models.天気.雨 when _moveData.Type == "ほのお":
+                case WeatherType.Sun when _moveData.Type == "みず":
+                case WeatherType.Rain when _moveData.Type == "ほのお":
                     return 0.5d;
                 default:
                     return 1d;
@@ -451,16 +484,66 @@ namespace PokeBrowser.Models
         {
             if (_moveData?.Class == "特殊")
                 return _attackInfo.Parameter.SpecialAttack;
+
+            if (_attackInfo.Item.Name == "ふといほね" && (_attackInfo.Name == "カラカラ" || _attackInfo.Name == "ガラガラ"))
+                return _attackInfo.Parameter.Attack * 2.0;
+
+            if (_attackInfo.Ability.Name == "ちからもち")
+                return _attackInfo.Parameter.Attack * 2.0;
+
+            if (_attackInfo.Ability.Name == "ヨガパワー")
+                return _attackInfo.Parameter.Attack * 2.0;
             
             return _attackInfo.Parameter.Attack;
         }
 
         private double CalcDefence()
         {
+            double def = _attackInfo.Parameter.SpecialDefense;
             if (_moveData?.Class == "特殊")
-                return _attackInfo.Parameter.SpecialDefense;
+            {
+                if (_defenceInfo.Item.Name == "しんかのきせき")
+                {
+                    def *= 1.5;
+                }
+                
+                if (_defenceInfo.Item.Name == "とつげきチョッキ")
+                {
+                    def *= _attackInfo.Parameter.SpecialDefense * 1.5d;
+                }
+
+                if (_battleField.Weather == WeatherType.Rock && _defenceInfo.ContainType("いわ"))
+                {
+                    def *= 1.5;
+                }
+                
+                return def;                
+            }
+
+            def = _defenceInfo.Parameter.Defense;
+
             
-            return _defenceInfo.Parameter.Defense;
+            if (string.IsNullOrEmpty(_defenceInfo.StatusAilment?.Name) is false && _defenceInfo.Ability.Name == "ふしぎなうろこ")
+            {
+                def *= 1.5;
+            }
+            
+            if (_defenceInfo.Item.Name == "しんかのきせき")
+            {
+                def *= 1.5;
+            }
+
+            if (_defenceInfo.Ability.Name == "ファーコート")
+            {
+                def *= 2.0;
+            }
+
+            if (_defenceInfo.Ability.Name == "くさのけがわ" && _battleField.Field == Models.Field.Glass) 
+            {
+                def *= 1.5;
+            }
+
+            return def;
         }
     }
 
