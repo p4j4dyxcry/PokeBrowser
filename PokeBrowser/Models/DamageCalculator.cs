@@ -65,11 +65,13 @@ namespace PokeBrowser.Models
         
         public AbilityData Ability { get; set; }
         
-        public Item Item { get; set; }
+        public Item Item { get; set; } = new Item();
         
-        public StatusAilment StatusAilment { get; set; }
+        public StatusAilment StatusAilment { get; set; } = new StatusAilment();
         
         public Gender Gender { get; set; }
+
+        public double Rank { get; set; } = 1.0;
 
         public bool ContainType(string type)
         {
@@ -335,12 +337,23 @@ namespace PokeBrowser.Models
             
             // 攻め手の特性・アイテムを考慮した技威力の補正計算
             damage *= CalcPower();
+            damage.truncation();
             
+            // 攻撃ランク補正
+            damage *= _attackInfo.Rank;
+            
+            // はりきり補正
+            if (_attackInfo.Ability?.Name == "はりきり")
+            {
+                damage *= 1.5;
+                damage.truncation();
+            }
+
             // 受け手側の特性・アイテムを考慮した防御 or 特防を計算
-            damage *= CalcDefence();
+            damage /= CalcDefence();
+            damage.truncation();
 
-            damage = damage.truncation();
-
+            // 攻撃側のレベル × 2 ÷ 5 ＋ 2
             damage = damage / 50d + 2;
             damage = damage.truncation();
 
@@ -533,11 +546,16 @@ namespace PokeBrowser.Models
                     def *= _attackInfo.Parameter.SpecialDefense * 1.5d;
                 }
 
+                def *= _defenceInfo.Rank;
+
+                def = def.truncation();
+                
+                // 岩タイプの砂嵐補正
                 if (_battleField.Weather == WeatherType.Rock && _defenceInfo.ContainType("いわ"))
                 {
                     def *= 1.5;
                 }
-                
+
                 return def;                
             }
 
@@ -564,6 +582,9 @@ namespace PokeBrowser.Models
                 def *= 1.5;
             }
 
+            def *= _defenceInfo.Rank;
+            def = def.truncation();
+            
             return def;
         }
     }
@@ -577,16 +598,19 @@ namespace PokeBrowser.Models
             return (4096d * p) / 4096d;
         }
 
+        // 切り上げ
         internal static double celling(this double d)
         {
             return Math.Ceiling(d);
         }
 
+        // 切り捨て
         internal static double truncation(this double d)
         {
             return Math.Truncate(d);
         }
 
+        // 四捨五入
         internal static double round(this double d)
         {
             return Math.Round(d);

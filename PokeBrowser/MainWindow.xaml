@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:PokeBrowser.Views"
     xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
+    xmlns:behaviors="clr-namespace:Avalton.Wpf.Behaviors;assembly=Avalton.Wpf"
     Title="Pokemon Browser"
     Width="1280"
     Height="720"
@@ -50,7 +51,8 @@
                             </ComboBox.ItemContainerStyle>
                         </ComboBox>
                         <TextBox
-                            controls:TextBoxWatermarkService.Watermark="例:ガラル ニャース"
+                            behaviors:TextBoxService.SelectAllOnGotFocus="True"
+                            behaviors:TextBoxService.Watermark="例:ガラル ニャース"
                             Width="120"
                             Margin="5,0,0,0"
                             Text="{Binding FilterText.Value, UpdateSourceTrigger=PropertyChanged}" />

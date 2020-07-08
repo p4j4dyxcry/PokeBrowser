@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PokeBrowser.Controls
+namespace Avalton.Wpf.Behaviors
 {
     /// <summary>
     /// .net internal class を外部から無理やり扱うためのクラス

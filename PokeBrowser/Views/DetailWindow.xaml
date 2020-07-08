@@ -9,6 +9,11 @@
     xmlns:data="clr-namespace:PokeBrowser.Data"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:PokeBrowser.ViewModels"
+    xmlns:messaging="http://schemas.livet-mvvm.net/2011/wpf"
+    xmlns:views="clr-namespace:PokeBrowser.Views"
+    xmlns:behaviors="clr-namespace:Avalton.Wpf.Behaviors;assembly=Avalton.Wpf"
+    xmlns:markupExtensions="clr-namespace:Avalton.Wpf.MarkupExtensions;assembly=Avalton.Wpf"
+    xmlns:ui="clr-namespace:Avalton.Wpf.Ui;assembly=Avalton.Wpf"
     Title="{Binding Name}"
     Width="720"
     Height="800"
@@ -40,18 +45,25 @@
     <d:DesignProperties.DataContext>
         <vms:PokemonDetailVm />
     </d:DesignProperties.DataContext>
+    <b:Interaction.Triggers>
+        <messaging:InteractionMessageTrigger MessageKey="ShowDetail" Messenger="{Binding Messenger}">
+            <messaging:TransitionInteractionMessageAction Mode="Normal" WindowType="{x:Type views:DetailView}" />
+        </messaging:InteractionMessageTrigger>
+    </b:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <WrapPanel Margin="8,8,8,4">
-            <TextBox Text="{Binding NameWithSearchBox.Value}" Width="70" HorizontalAlignment="Left"
-                     controls:TextBoxWatermarkService.Watermark="ポケモン名">
+            <TextBox Text="{Binding NameWithSearchBox.Value}"
+                                Width="100"
+                                behaviors:TextBoxService.Watermark="ポケモン名を入力">
                 <b:Interaction.Behaviors>
-                    <controls:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}" />
+                    <behaviors:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}"/>
                 </b:Interaction.Behaviors>
             </TextBox>
+            <Button Content="複製" Command="{Binding ShowDetailCommand}"/>
             <ItemsControl ItemsSource="{Binding Forms}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -98,11 +110,11 @@
                     <StackPanel>
                         <TextBlock
                             Margin="4"
-                            controls:TextBlockSelectableService.IsSelectable="True"
+                            behaviors:TextBlockSelectableService.IsSelectable="True"
                             Text="{Binding Type1}" />
                         <TextBlock
                             Margin="4"
-                            controls:TextBlockSelectableService.IsSelectable="True"
+                            behaviors:TextBlockSelectableService.IsSelectable="True"
                             Text="{Binding Type2}" />
                     </StackPanel>
                 </GroupBox>
@@ -115,17 +127,17 @@
                         <WrapPanel Margin="0,4">
                             <TextBlock
                                 Margin="0,0,10,0"
-                                controls:TextBlockSelectableService.IsSelectable="True"
+                                behaviors:TextBlockSelectableService.IsSelectable="True"
                                 Text="{Binding Ability1}" />
-                            <TextBlock controls:TextBlockSelectableService.IsSelectable="True"
+                            <TextBlock behaviors:TextBlockSelectableService.IsSelectable="True"
                                        Text="{Binding Ability2}" />
                         </WrapPanel>
                         <WrapPanel Margin="0,4">
                             <TextBlock
                                 Margin="0,0,10,0"
-                                controls:TextBlockSelectableService.IsSelectable="True"
+                                behaviors:TextBlockSelectableService.IsSelectable="True"
                                 Text="(隠)" />
-                            <TextBlock controls:TextBlockSelectableService.IsSelectable="True"
+                            <TextBlock behaviors:TextBlockSelectableService.IsSelectable="True"
                                        Text="{Binding Ability3}" />
                         </WrapPanel>
                     </StackPanel>
@@ -148,7 +160,7 @@
                                 <TextBlock Text="全て" />
                             </ComboBox>
                             <TextBox HorizontalContentAlignment="Right"
-                                     controls:TextBoxWatermarkService.Watermark="タイプ" />
+                                     behaviors:TextBoxService.Watermark="タイプ" />
                         </DockPanel>
                         <ListView Grid.Row="1" ItemsSource="{Binding Moves}" />
                     </Grid>
@@ -170,7 +182,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding Hp}" />
                             </Grid>
@@ -187,7 +199,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding Attack}" />
                             </Grid>
@@ -204,7 +216,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding Defense}" />
                             </Grid>
@@ -221,7 +233,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding SpAttack}" />
                             </Grid>
@@ -238,7 +250,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding SpDefense}" />
                             </Grid>
@@ -255,7 +267,7 @@
                                     CornerRadius="2" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
-                                    controls:TextBlockSelectableService.IsSelectable="True"
+                                    behaviors:TextBlockSelectableService.IsSelectable="True"
                                     FontSize="20"
                                     Text="{Binding Speed}" />
                             </Grid>
@@ -301,15 +313,15 @@
                                     Width="35"
                                     Margin="0,0,5,0"
                                     Text="{Binding Level.Value}"
-                                    controls:TextBoxWatermarkService.Watermark="レベル" />
+                                    behaviors:TextBoxService.Watermark="レベル" />
 
                                 <TextBox
-                                    Width="50"
+                                    Width="105"
                                     Margin="0,0,5,0"
                                     Text="{Binding Personality.Value}"
-                                    controls:TextBoxWatermarkService.Watermark="まじめ">
+                                    behaviors:TextBoxService.Watermark="まじめ">
                                     <b:Interaction.Behaviors>
-                                        <controls:TextBoxIntellisenseBehavior
+                                        <behaviors:TextBoxIntellisenseBehavior
                                             ItemsSource="{x:Static data:DataBaseService.Personalities}" />
                                     </b:Interaction.Behaviors>
                                 </TextBox>
@@ -518,39 +530,67 @@
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                DataContext="{Binding Param}"
-                                Text="{Binding Hp.Value}" />
+                                Text="{Binding Param.Hp.Value}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="3"
-                                DataContext="{Binding Param}"
-                                Text="{Binding Attack.Value}" />
+                                Background="{Binding Personality.Value , Converter={vms:PersonToBg Person=Attack}}"
+                                Text="{Binding Param.Attack.Value}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="5"
-                                DataContext="{Binding Param}"
-                                Text="{Binding Defense.Value}" />
+                                Background="{Binding Personality.Value , Converter={vms:PersonToBg Person=Defence}}"
+                                Text="{Binding Param.Defense.Value}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="7"
-                                DataContext="{Binding Param}"
-                                Text="{Binding SpecialAttack.Value}" />
+                                Background="{Binding Personality.Value , Converter={vms:PersonToBg Person=SpAttack}}"
+                                Text="{Binding Param.SpecialAttack.Value}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="9"
-                                DataContext="{Binding Param}"
-                                Text="{Binding SpecialDefense.Value}" />
+                                Background="{Binding Personality.Value , Converter={vms:PersonToBg Person=SpDefence}}"
+                                Text="{Binding Param.SpecialDefense.Value}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="11"
-                                DataContext="{Binding Param}"
-                                Text="{Binding Speed.Value}" />
+                                Background="{Binding Personality.Value , Converter={vms:PersonToBg Person=Speed}}"
+                                Text="{Binding Param.Speed.Value}" />
                         </Grid>
                         <TextBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"
                                  Text="{Binding ClipBoardParameter.Value}" />
                     </StackPanel>
                 </Expander>
-                <Expander Header="ダメージ計算" IsExpanded="True" />
+                <Expander Header="ダメージ計算" DataContext="{Binding DamageCalcVm.Value}" IsExpanded="True">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBox Text="{Binding Name.Value}" 
+                                     behaviors:TextBoxService.Watermark="ポケモンの名前を入力" Grid.Column="0" Grid.Row="0">
+                                <b:Interaction.Behaviors>
+                                    <behaviors:TextBoxIntellisenseBehavior ItemsSource="{x:Static data:DataBaseService.Pokemons}" />
+                                </b:Interaction.Behaviors>
+                            </TextBox>
+                            <TextBox behaviors:TextBoxService.Watermark="ランク(-6 ～ +6)" Grid.Column="1" Grid.Row="0"/>
+                            <ComboBox Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Mode}" SelectedIndex="{Binding IsDefence.Value}" x:Name="AttackOrDefence"/>
+                            <TextBox behaviors:TextBoxService.Watermark="わざ" Grid.Column="0" Grid.Row="1" 
+                                     Visibility="{Binding SelectedIndex , Source={x:Reference AttackOrDefence} , Converter={markupExtensions:IntEqualToVisible Value=1}}"/>
+                            <TextBox behaviors:TextBoxService.Watermark="もちもの" Grid.Column="1" Grid.Row="1"/>
+                            <TextBox behaviors:TextBoxService.Watermark="とくせい" Grid.Column="2" Grid.Row="1">
+                            </TextBox>
+                        </Grid>     
+                        <TextBlock Text="結果"/>
+                        <TextBlock Text="{Binding Result}"/>
+                    </StackPanel>
+                </Expander>
             </StackPanel>
         </Grid>
     </Grid>

@@ -7,12 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 
-
-namespace PokeBrowser.Controls
+namespace Avalton.Wpf.Behaviors
 {
-    /// <summary>
-    /// テキストボックスにインテリセンスから指定させる機能を追加するビヘイビア
-    /// </summary>
     public class TextBoxIntellisenseBehavior : Behavior<TextBox>
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
@@ -27,47 +23,66 @@ namespace PokeBrowser.Controls
         public static readonly DependencyProperty IntellisenseMaxHeightProperty = DependencyProperty.Register(
             nameof(IntellisenseMaxHeight), typeof(double), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(360d, IntellisenseSizeChanged));
 
+        public static readonly DependencyProperty MaxRecodeProperty = DependencyProperty.Register(
+            "MaxRecode", typeof(int), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(-1));
+
+        public int MaxRecode
+        {
+            get => (int)GetValue(MaxRecodeProperty);
+            set => SetValue(MaxRecodeProperty, value);
+        }
+
         public double IntellisenseMaxHeight
         {
-            get => (double)GetValue(IntellisenseMaxHeightProperty);
+            get => (double) GetValue(IntellisenseMaxHeightProperty);
             set => SetValue(IntellisenseMaxHeightProperty, value);
         }
 
-        public static readonly DependencyProperty IntellisenseMaxLineProperty = DependencyProperty.Register(
-            nameof(IntellisenseMaxLine), typeof(int), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(18, IntellisenseSizeChanged));
-
-        public int IntellisenseMaxLine
-        {
-            get => (int)GetValue(IntellisenseMaxLineProperty);
-            set => SetValue(IntellisenseMaxLineProperty, value);
-        }
-
         public static readonly DependencyProperty IntellisenseMinHeightProperty = DependencyProperty.Register(
-            nameof(IntellisenseMinHeight), typeof(double), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(120d, IntellisenseSizeChanged));
+            nameof(IntellisenseMinHeight), typeof(double), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(20d, IntellisenseSizeChanged));
 
         public double IntellisenseMinHeight
         {
-            get => (double)GetValue(IntellisenseMinHeightProperty);
+            get => (double) GetValue(IntellisenseMinHeightProperty);
             set => SetValue(IntellisenseMinHeightProperty, value);
         }
-
-        public static readonly DependencyProperty IntellisenseMinWidthProperty = DependencyProperty.Register(
-            nameof(IntellisenseMinWidth), typeof(double), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(120d, IntellisenseSizeChanged));
-
         private static void IntellisenseSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is TextBoxIntellisenseBehavior textBoxIntellisenseBehavior)
             {
                 textBoxIntellisenseBehavior._listBox.MaxHeight = textBoxIntellisenseBehavior.IntellisenseMaxHeight;
-                textBoxIntellisenseBehavior._listBox.MinWidth = textBoxIntellisenseBehavior.IntellisenseMinWidth;
+                textBoxIntellisenseBehavior._listBox.MinHeight = textBoxIntellisenseBehavior.IntellisenseMinHeight;
             }
         }
 
-        public double IntellisenseMinWidth
+        public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
+            "IsOpen", typeof(bool), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(default(bool),
+                (o, args) =>
+                {
+                    if (o is TextBoxIntellisenseBehavior i)
+                    {
+                        if(i.IsOpen && i._intellisense.IsOpen is false)
+                            i.TryOpenPopup(true);
+                        else if(i._intellisense.IsOpen is true)
+                            i.CloseIntellisense();
+                    }
+                }));
+
+        public bool IsOpen
         {
-            get => (double)GetValue(IntellisenseMinWidthProperty);
-            set => SetValue(IntellisenseMinWidthProperty, value);
+            get => (bool)GetValue(IsOpenProperty);
+            set => SetValue(IsOpenProperty, value);
         }
+
+        public static readonly DependencyProperty LostFocusClosedProperty = DependencyProperty.Register(
+            "LostFocusClosed", typeof(bool), typeof(TextBoxIntellisenseBehavior), new PropertyMetadata(true));
+
+        public bool LostFocusClosed
+        {
+            get => (bool)GetValue(LostFocusClosedProperty);
+            set => SetValue(LostFocusClosedProperty, value);
+        }
+
 
         private readonly ListBox _listBox = new ListBox();
         private readonly Popup _intellisense = new Popup();
@@ -76,9 +91,9 @@ namespace PokeBrowser.Controls
             _listBox.PreviewMouseDown += (s, e) =>
             {
                 var target = _listBox.InputHitTest(e.GetPosition(_listBox));
-                if (target is DependencyObject dependencyObject)
+                if (target is FrameworkElement dependencyObject)
                 {
-                    var item = dependencyObject.GetSelfAndAncestors().FirstOrDefault(x => x is ListBoxItem);
+                    var item = dependencyObject.GetSelfAndAncestors().FirstOrDefault(x=> x is ListBoxItem);
                     if (item is FrameworkElement frameworkElement)
                     {
                         _listBox.SelectedItem = frameworkElement.DataContext;
@@ -94,19 +109,21 @@ namespace PokeBrowser.Controls
             VirtualizingPanel.SetScrollUnit(_listBox, ScrollUnit.Pixel);
 
             var itemStyle = new Style(typeof(ListBoxItem));
-            itemStyle.Setters.Add(new EventSetter(Control.PreviewMouseDoubleClickEvent,
+            itemStyle.Setters.Add(new EventSetter(UIElement.MouseUpEvent,
                 new MouseButtonEventHandler(
                 (s, e) =>
                 {
                     if (s is FrameworkElement frameworkElement)
                     {
-                        AssociatedObject.Text = frameworkElement.DataContext.ToString();
+                        AssociatedObject.Text = frameworkElement.DataContext?.ToString() ?? string.Empty;
                         AssociatedObject.CaretIndex = AssociatedObject.Text.Length;
-                        OpenIntellisense();
+                        CloseIntellisense();
                         AssociatedObject.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
                     }
                 })));
             _listBox.ItemContainerStyle = itemStyle;
+            _listBox.MaxHeight = IntellisenseMaxHeight;
+            _listBox.MinHeight = IntellisenseMinHeight;
 
             _intellisense.StaysOpen = false;
             _intellisense.Child = _listBox;
@@ -114,43 +131,45 @@ namespace PokeBrowser.Controls
 
         protected override void OnAttached()
         {
-            AssociatedObject.KeyDown += OnKeyDown;
+            AssociatedObject.KeyDown          += OnKeyDown;
             AssociatedObject.PreviewTextInput += OnPreviewTextInput;
-            AssociatedObject.PreviewKeyDown += OnPreviewKeyDown;
-            AssociatedObject.TextChanged += OnTextChanged;
-            AssociatedObject.LostFocus += OnLostFocus;
+            AssociatedObject.PreviewKeyDown   += OnPreviewKeyDown;
+            AssociatedObject.TextChanged      += OnTextChanged;
+            AssociatedObject.LostFocus        += OnLostFocus;
             AssociatedObject.MouseDoubleClick += OnDoubleClick;
         }
 
         protected override void OnDetaching()
         {
-            AssociatedObject.KeyDown -= OnKeyDown;
+            AssociatedObject.KeyDown          -= OnKeyDown;
             AssociatedObject.PreviewTextInput -= OnPreviewTextInput;
-            AssociatedObject.PreviewKeyDown -= OnPreviewKeyDown;
-            AssociatedObject.TextChanged -= OnTextChanged;
-            AssociatedObject.LostFocus -= OnLostFocus;
+            AssociatedObject.PreviewKeyDown   -= OnPreviewKeyDown;
+            AssociatedObject.TextChanged      -= OnTextChanged;
+            AssociatedObject.LostFocus        -= OnLostFocus;
             AssociatedObject.MouseDoubleClick -= OnDoubleClick;
         }
 
-        private void TryOpenPopup()
+        private void TryOpenPopup(bool showAll)
         {
             if (ItemsSource?.Any() is true)
             {
                 var defaultIndex = -1;
-                var filterdItems = ItemsSource
-                    .Where(item => item.ToLower().Contains(AssociatedObject.Text.ToLower()))
-                    .Distinct();
+                var targetItems = ItemsSource.ToArray();
+                if (showAll is false)
+                {
+                    targetItems = targetItems
+                        .Where(item => item.ToLower()
+                            .Contains(AssociatedObject.Text.ToLower()))
+                        .Distinct()
+                        .ToArray();
+                }
 
-                var targetItems = IntellisenseMaxLine > 0 ?
-                      filterdItems.Take(IntellisenseMaxLine).ToArray()
-                    : filterdItems.ToArray();
-
-                if (targetItems.Length is 0)
+                if (targetItems.Any() is false)
                 {
                     CloseIntellisense();
                     return;
                 }
-
+                _listBox.MinWidth = AssociatedObject.ActualWidth;
                 _intellisense.PlacementTarget = AssociatedObject;
                 OpenIntellisense();
 
@@ -166,8 +185,12 @@ namespace PokeBrowser.Controls
                 if (defaultIndex < 0 && targetItems.Any())
                     defaultIndex = 0;
 
+                if (MaxRecode > 0)
+                {
+                    targetItems = targetItems.Take(MaxRecode).ToArray();
+                }
 
-                _listBox.ItemsSource = targetItems;
+                _listBox.ItemsSource   = targetItems;
                 _listBox.SelectedIndex = defaultIndex;
                 if (defaultIndex >= 0)
                     _listBox.ScrollIntoView(_listBox.SelectedItem);
@@ -180,11 +203,15 @@ namespace PokeBrowser.Controls
 
         private void OpenIntellisense()
         {
+            if(IsOpen is false)
+                SetValue(IsOpenProperty,true);
             _intellisense.IsOpen = true;
         }
 
         private void CloseIntellisense()
         {
+            if(IsOpen is true)
+                SetValue(IsOpenProperty,false);
             _intellisense.IsOpen = false;
         }
 
@@ -204,7 +231,7 @@ namespace PokeBrowser.Controls
         {
             if (_listBox.SelectedItem != null)
             {
-                AssociatedObject.Text = _listBox.SelectedItem.ToString();
+                AssociatedObject.Text = _listBox.SelectedItem.ToString() ?? string.Empty;
                 AssociatedObject.CaretIndex = AssociatedObject.Text.Length;
                 CloseIntellisense();
             }
@@ -214,18 +241,18 @@ namespace PokeBrowser.Controls
         {
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Space)
             {
-                TryOpenPopup();
+                TryOpenPopup(false);
                 e.Handled = true;
             }
         }
 
         private void OnDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TryOpenPopup();
+            TryOpenPopup(false);
             e.Handled = true;
         }
 
-        private Dictionary<Key, Action> KeyboardActions { get; set; }
+        private Dictionary<Key,Action> KeyboardActions { get; set; }
 
         private Dictionary<Key, Action> MakeKeyboardActions()
         {
@@ -249,8 +276,8 @@ namespace PokeBrowser.Controls
                 }
             };
 
-            dictionary[Key.Enter] =
-            dictionary[Key.Tab] = ApplySelectedText;
+            dictionary[Key.Enter]  =
+            dictionary[Key.Tab]    = ApplySelectedText;
 
             dictionary[Key.Escape] = CloseIntellisense;
 
@@ -271,7 +298,16 @@ namespace PokeBrowser.Controls
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            GetOrCreateKeyboardActions(e.Key)?.Invoke();
+            if (_intellisense.IsOpen)
+            {
+                var action = GetOrCreateKeyboardActions(e.Key);
+
+                if (action != null)
+                {
+                    action.Invoke();
+                    e.Handled = true;
+                }
+            }
         }
 
         private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -281,7 +317,8 @@ namespace PokeBrowser.Controls
 
         private void OnLostFocus(object sender, RoutedEventArgs e)
         {
-            CloseIntellisense();
+            if(LostFocusClosed)
+                CloseIntellisense();
         }
 
         private bool _isInitText = true;
@@ -302,7 +339,7 @@ namespace PokeBrowser.Controls
                 }
                 else
                 {
-                    TryOpenPopup();
+                    TryOpenPopup(false);
                 }
                 CancelRequestIntellisense();
             }

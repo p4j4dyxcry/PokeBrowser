@@ -84,18 +84,18 @@ namespace PokeBrowser.Models
 
             switch (personality.Up)
             {
-                case PersonalityParameter.Atack:     Personality.Attack         = 1.1; break;
+                case PersonalityParameter.Attack:     Personality.Attack         = 1.1; break;
                 case PersonalityParameter.Defence:   Personality.Defense        = 1.1; break;
-                case PersonalityParameter.SpAtack:   Personality.SpecialAttack  = 1.1; break;
+                case PersonalityParameter.SpAttack:   Personality.SpecialAttack  = 1.1; break;
                 case PersonalityParameter.SpDefence: Personality.SpecialDefense = 1.1; break;
                 case PersonalityParameter.Speed:     Personality.Speed          = 1.1; break;
             }
 
             switch (personality.Down)
             {
-                case PersonalityParameter.Atack:     Personality.Attack         = 0.9; break;
+                case PersonalityParameter.Attack:     Personality.Attack         = 0.9; break;
                 case PersonalityParameter.Defence:   Personality.Defense        = 0.9; break;
-                case PersonalityParameter.SpAtack:   Personality.SpecialAttack  = 0.9; break;
+                case PersonalityParameter.SpAttack:   Personality.SpecialAttack  = 0.9; break;
                 case PersonalityParameter.SpDefence: Personality.SpecialDefense = 0.9; break;
                 case PersonalityParameter.Speed:     Personality.Speed          = 0.9; break; 
             }

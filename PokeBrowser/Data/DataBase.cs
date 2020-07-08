@@ -46,7 +46,7 @@ namespace PokeBrowser.Data
 
         public PokemonType FindType(string name) => _typeDictionary[name];
         public AbilityData FindAbility(string name) => _abliDictionary[name];
-        public PersonalityData FindPersonality(string name) => _persDictionary[name];
+        public PersonalityData FindPersonality(string name) => _persDictionary.ContainsKey(name) ? _persDictionary[name] : default;
         public PokemonData FindPokemon(string name , string form = null) => _pokemonDictionary[pokemon_hash(name,form)];
         public PokemonData FindPokemon(int id) => _pokemonDictionaryWithId[id];
 

@@ -18,4 +18,8 @@
     <PackageReference Include="System.Reactive.Linq" Version="4.3.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Avalton.Wpf\Avalton.Wpf.csproj" />
+  </ItemGroup>
+
 </Project>

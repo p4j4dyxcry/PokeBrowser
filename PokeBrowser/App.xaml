@@ -1,7 +1,6 @@
 ﻿<Application x:Class="PokeBrowser.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:PokeBrowser"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -10,7 +9,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
                 <ResourceDictionary Source="Controls/LabeledControl.xaml" />
+                <ResourceDictionary Source="/Avalton.Wpf;component/Ui/IntelliComboBox.xaml" />
+                <ResourceDictionary Source="/Avalton.Wpf;component/Ui/Vector2EditBox.xaml" />
+                <ResourceDictionary Source="/Avalton.Wpf;component/Ui/Vector3EditBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+           
         </ResourceDictionary>
     </Application.Resources>
 </Application>

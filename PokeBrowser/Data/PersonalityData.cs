@@ -7,9 +7,9 @@ namespace PokeBrowser.Data
     public enum PersonalityParameter
     {
         None,
-        Atack,
+        Attack,
         Defence,
-        SpAtack,
+        SpAttack,
         SpDefence,
         Speed,
     }

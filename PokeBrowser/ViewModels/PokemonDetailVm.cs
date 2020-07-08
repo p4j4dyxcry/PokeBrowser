@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Windows.Input;
+using Livet.Messaging;
 using PokeBrowser.Data;
 using PokeBrowser.Foundation;
 using PokeBrowser.Models;
@@ -47,6 +48,8 @@ namespace PokeBrowser.ViewModels
         /// </summary>
         public IReactiveProperty<string> ClipBoardParameter { get; }
 
+        public IReactiveProperty<DamageCalcVm> DamageCalcVm { get; }
+        
         /// <summary>
         /// 努力値
         /// </summary>
@@ -84,6 +87,9 @@ namespace PokeBrowser.ViewModels
         
         public ICommand ChangePokemonCommand { get; }
         
+        public ICommand ShowDetailCommand { get; }
+        
+        
         public ObservableCollection<PokemonFormVm> Forms { get; } = new ObservableCollection<PokemonFormVm>();
 
         public PokemonDetailVm()
@@ -97,6 +103,7 @@ namespace PokeBrowser.ViewModels
         /// <param name="pokemonData"></param>
         public PokemonDetailVm(PokemonData pokemonData) : base(pokemonData)
         {
+            DamageCalcVm = new ReactivePropertySlim<DamageCalcVm>();
             UpdateFormSource();
             ParameterCalculator.SetPokemon(pokemonData.Name , pokemonData.Form);
             Ev = new ParameterVm(new ParameterData<int>());
@@ -112,6 +119,7 @@ namespace PokeBrowser.ViewModels
             {
                 ChangePokemon(x.Name,x.Form);
             });
+            ShowDetailCommand = new DelegateCommand(() => Messenger.Raise(new TransitionMessage(new PokemonDetailVm(Model), "ShowDetail")));
             
             NameWithSearchBox = new ReactiveProperty<string>(string.Empty).AddTo(CompositeDisposable);
             NameWithSearchBox.Subscribe(_ => ChangePokemon(_, null)).AddTo(CompositeDisposable);
@@ -180,6 +188,7 @@ namespace PokeBrowser.ViewModels
                 foreach (var f in forms)
                     Forms.Add(new PokemonFormVm(f));
             }
+            DamageCalcVm.Value = new DamageCalcVm(Model);
         }
 
         private void UpdateFromParameter()
